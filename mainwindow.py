@@ -156,12 +156,8 @@ class MainWindow(QMainWindow):
         htmlDoc = htmlFile.read()
         htmlFile.close()
 
-        #convert markdown to html and append the result to the HTML document
-        #mdFile = open("Test.md", "r")
-        #md= mdFile.read()
-        #mdFile.close()
-        #htmlFromMd = parser.convert(md)
-        #htmlDoc = htmlDoc + htmlFromMd
+        #convert markdown note to html and append the result to the HTML document
+        htmlDoc = htmlDoc + parser.convert(noteMarkdown)
 
         #append the end (bottom/foot) template to the HTML document
         htmlFile = open("end_html_template_file", "r")
