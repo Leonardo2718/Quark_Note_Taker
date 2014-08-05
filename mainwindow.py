@@ -169,4 +169,4 @@ class MainWindow(QMainWindow):
 
     def updatePreview(self):
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
-        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + quarkExtra.config["start_html_template_file"]) )
+        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )

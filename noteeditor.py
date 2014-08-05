@@ -43,7 +43,7 @@ import os
 
 #Qt objects
 #from PyQt5.QtCore import *
-#from PyQt5.QtGui import *
+from PyQt5.QtGui import QTextOption
 from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
@@ -57,4 +57,5 @@ class NoteEditor(QPlainTextEdit):
     def __init__(self, parent):
         super(NoteEditor, self).__init__(parent)
         self.mdHighlighter = MDHighlighter( self.document() )
+        self.setWordWrapMode(QTextOption.NoWrap)
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
