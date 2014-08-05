@@ -1,45 +1,74 @@
 body {
-    /*background-color: #c0c0ce;*/
-    /*background-color: #bbbbff;*/
-    font-family: Helvetica, sans-serif;
-    /*font-size: 16px;*/
+    background-color: #F6F7F9;
+    /*font-family: Verdana, Geneva, sans-serif;
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;*/
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    font-size: 15px;
+    min-height: 100%;
 }
 
 h1, h2, h3, h4 {
-	font-family: Georgia, serif;
+    font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
 }
 
 code {
-	font-family: "Courier New", "Nimbus Mono L", monospace;
-	/*font-size: 14px;*/
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    font-size: 14px;
 }
 
 p code {
-	padding: 0.1em 0.3em;
-	border-radius: 0.5em;
-	background-color: #eeeeee;
+    padding: 0 0.4em;
+    /*border: 1px inset #fff;*/
+    border-radius: 0.3em;
+    background-color: #dadaf5;
 }
 
 pre {
-	background-color: #eeeeff;
-	padding: 0.7em;
-	border-left: 1em solid #ccc;
-	border-radius:  0 0.5em 0.5em 0;
+    background-color: #eeeeff;
+    margin: 1em 2em 1em 1.5em;
+    padding: 0.7em;
+    border-left: 0.5em solid #ccc;
+    border-radius:  0 0.5em 0.5em 0;
+    word-wrap: break-word;
 }
 
 blockquote {
-	background-color: #eeeeff;
-	margin-left: 1em;
-	padding: 0.7em;
-	border: 1px solid #ccc;
-	border-radius:  0.3em;
-	font-style: italic;
+    background-color: #eeeeff;
+    margin: 1em 2em 1em 1.5em;
+    padding: 0.7em;
+    border-left: 0.5em solid #00a2c9;
+    border-radius: 0 0.5em 0.5em 0;
+    font-family: Tahoma, Verdana, Segoe, sans-serif;
+    font-size: 15px;
 }
 
 blockquote p {
-	margin: 0;
+    margin: 0;
 }
 
 li {
-	padding: 0em;
+    padding: 0em;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 2px solid #ddd;
+}
+
+th {
+    text-align: center;
+    padding: 0.1em 0.3em;
+}
+
+td {
+    padding: 0.3em 0.5em;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
 }

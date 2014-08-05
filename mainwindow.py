@@ -127,6 +127,7 @@ class MainWindow(QMainWindow):
         #connect signals to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutOnAction)
+        self.noteEditor.textChanged.connect(self.updatePreview)
 
 
     def changeLayoutOnAction(self, action):
@@ -160,8 +161,12 @@ class MainWindow(QMainWindow):
         htmlDoc = htmlDoc + parser.convert(noteMarkdown)
 
         #append the end (bottom/foot) template to the HTML document
-        htmlFile = open("end_html_template_file", "r")
+        htmlFile = open(quarkExtra.config["end_html_template_file"], "r")
         htmlDoc = htmlDoc + htmlFile.read()
         htmlFile.close()
 
         return htmlDoc
+
+    def updatePreview(self):
+        htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
+        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + quarkExtra.config["start_html_template_file"]) )
