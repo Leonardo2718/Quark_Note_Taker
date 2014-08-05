@@ -1,6 +1,6 @@
 {
     "start_html_template_file": "html-template/htmlDoc_start.html",
     "end_html_template_file": "html-template/htmlDoc_end.html",
-    "notes_dir": "~/QuarkNotes",
+    "notes_dir": ".",
     "theme_file": "themes/default.css"
 }

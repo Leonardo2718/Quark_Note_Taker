@@ -73,6 +73,7 @@ class MainWindow(QMainWindow):
 
         self.action = {"New": self.menu["File"].addAction("New")}
         self.action["Open"] = self.menu["File"].addAction("Open")
+        self.action["Open"].setShortcut( QKeySequence.Open )
         self.action["Save"] = self.menu["File"].addAction("Save")
         self.action["Save As"] = self.menu["File"].addAction("Save As")
         self.action["Save Copy As"] = self.menu["File"].addAction("Save Copy As")
@@ -128,6 +129,7 @@ class MainWindow(QMainWindow):
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutOnAction)
         self.noteEditor.textChanged.connect(self.updatePreview)
+        self.action["Open"].triggered.connect(self.openFileAction)
 
 
     def changeLayoutOnAction(self, action):
@@ -170,3 +172,11 @@ class MainWindow(QMainWindow):
     def updatePreview(self):
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+
+    def openFileAction(self):
+        """Open an existing file by getting its path from a dialog."""
+
+        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])                #get the search directory
+        filePath = QFileDialog.getOpenFileName(self, "Quark: Open File", searchPath)#get the file path from the user (note: 'filePath' is a tuple)
+        if filePath[0] != "":                                                       #if the user did not hit the 'cancel' button
+            self.noteEditor.openFileRequest(filePath[0])                                #open the file in the editor

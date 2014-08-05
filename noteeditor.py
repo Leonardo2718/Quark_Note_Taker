@@ -42,7 +42,7 @@ import sys
 import os
 
 #Qt objects
-#from PyQt5.QtCore import *
+#from PyQt5.QtCore import QFile
 from PyQt5.QtGui import QTextOption
 from PyQt5.QtWidgets import QPlainTextEdit
 
@@ -58,4 +58,19 @@ class NoteEditor(QPlainTextEdit):
         super(NoteEditor, self).__init__(parent)
         self.mdHighlighter = MDHighlighter( self.document() )
         self.setWordWrapMode(QTextOption.NoWrap)
+        self.noteFilePath = ""  #stores path to the file being edited
+
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
+
+    def openFileRequest(self, filePath):
+        """Open a file using its path (string) in the editor.  Returns 'True' if successful, 'False' otherwise."""
+
+        noErrors = True         #set return state
+        noteFile = open(filePath, "r")
+        if noteFile:            #if the file was opened successfully
+            self.setPlainText( noteFile.read() )    #set its contents in the editor
+            self.noteFilePath = filePath            #save the file path to the internal variable
+        else:
+            noErrors = False
+        noteFile.close()
+        return noErrors
