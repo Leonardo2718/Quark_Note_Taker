@@ -123,6 +123,7 @@ class MainWindow(QMainWindow):
         #outputFile.close()
 
         self.notePreview = QWebView(self.editingArea)
+        self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
         #self.notePreview.setHtml( htmlDoc,  QUrl("file://" + os.getcwd() + "/") )
 
         self.editingArea.addWidget(self.noteEditor)
@@ -139,6 +140,8 @@ class MainWindow(QMainWindow):
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
+
+        self.notePreview.page().linkClicked.connect(self.linkClickHandler)
 
         #last minute configs
         self.changeTitle("")    #set default window title
@@ -241,3 +244,8 @@ class MainWindow(QMainWindow):
             noteFile.close()                    #
 
             self.noteEditor.openFileRequest(filePath[0])    #open newly created file
+
+    def linkClickHandler(self, url):
+        """Handles links clicked (in note preview) which do not point to local files."""
+
+        QDesktopServices.openUrl( url );
