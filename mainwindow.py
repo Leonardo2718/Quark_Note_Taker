@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 3, 2014
+Last Modified: August 6, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
         self.menu["View"] = self.menuBar().addMenu("View")
 
         self.action = {"New": self.menu["File"].addAction("New")}
+        self.action["New"].setShortcut( QKeySequence.New )
         self.action["Open"] = self.menu["File"].addAction("Open")
         self.action["Open"].setShortcut( QKeySequence.Open )
         self.action["Save"] = self.menu["File"].addAction("Save")
@@ -134,6 +135,7 @@ class MainWindow(QMainWindow):
         self.action["Save"].triggered.connect(self.saveFileAction)
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
+        self.action["New"].triggered.connect(self.newNoteAction)
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
@@ -224,3 +226,18 @@ class MainWindow(QMainWindow):
             self.setWindowTitle("Untitled" + titleTail)
         else:                               #else, get the file name for the file path
             self.setWindowTitle(os.path.basename(noteFilePath) + titleTail)
+
+    def newNoteAction(self):
+        """Create a new note.  Automatically saves old note."""
+
+        self.saveFileAction()   #save currently open note
+
+        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])
+        filePath = QFileDialog.getSaveFileName(self, "New Note", searchPath)
+
+        if filePath[0] != "":
+            noteFile = open(filePath[0], "w+")  #create blank file
+            noteFile.write("")                  #
+            noteFile.close()                    #
+
+            self.noteEditor.openFileRequest(filePath[0])    #open newly created file
