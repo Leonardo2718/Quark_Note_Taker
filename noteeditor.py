@@ -42,7 +42,7 @@ import sys
 import os
 
 #Qt objects
-#from PyQt5.QtCore import QFile
+from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtGui import QTextOption
 from PyQt5.QtWidgets import QPlainTextEdit
 
@@ -54,6 +54,7 @@ from mdhighlighter import MDHighlighter
 
 class NoteEditor(QPlainTextEdit):
     """The note editing class used uses a plain text editing window to edit markdown files (notes)."""
+
     def __init__(self, parent):
         super(NoteEditor, self).__init__(parent)
         self.mdHighlighter = MDHighlighter( self.document() )
@@ -61,6 +62,7 @@ class NoteEditor(QPlainTextEdit):
         self.noteFilePath = ""  #stores path to the file being edited
 
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
+
 
     def openFileRequest(self, filePath):
         """Open a file using its path (string) in the editor.  Returns 'True' if successful, 'False' otherwise."""
@@ -70,7 +72,70 @@ class NoteEditor(QPlainTextEdit):
         if noteFile:            #if the file was opened successfully
             self.setPlainText( noteFile.read() )    #set its contents in the editor
             self.noteFilePath = filePath            #save the file path to the internal variable
+            self.noteFileChanged.emit( os.path.abspath(self.noteFilePath) ) #emit signal to notify other objects of file change
         else:
             noErrors = False
+
         noteFile.close()
         return noErrors
+
+
+    def writeToFile(self, filePath):
+        """Writes text in editor to file 'filePath'.  Returns 'True' if successful, 'False' otherwise."""
+
+        noErrors = True
+        if os.path.exists(filePath):    #check if file exists
+            filePath = os.path.abspath(filePath)
+            noteFile = open(filePath, "w")
+            if noteFile:                            #if file was opened successfully
+                noteFile.write( self.toPlainText() )    #write text to file
+            else:
+                noErrors = False
+        else:
+            noErrors = False
+
+        return noErrors
+        #os.path.isdir
+
+
+    def saveFileRequest(self):
+        """Saves text in editor to note file.  Returns 'True' if successful, 'False' otherwise."""
+
+        noErrors = True
+        if self.noteFilePath != "":                     #if note path is set
+            noErrors = self.writeToFile( self.noteFilePath )#write text to note file
+        else:
+            noErrors = False
+
+        return noErrors
+
+
+    def saveAsRequested(self, filePath):
+        """Save text in editor to a new file ('filePath') and set it as the new note file.  Returns 'True' if successful, 'False' otherwise."""
+
+        noErrors = True
+
+        newFile = open(filePath, "w+")  #create the new file
+        newFile.close()
+
+        noErrors = self.writeToFile( filePath )
+        if noErrors:                    #if no errors occured
+            self.noteFilePath = filePath    #set the new file as the internal note file
+            self.noteFileChanged.emit( os.path.abspath(self.noteFilePath) ) #emit signal to notify other objects of file change
+
+        return noErrors
+
+    def saveCopyAsRequested(self, filePath):
+        """Save note to a new file without loading it.  Returns 'True' if successful, 'False' otherwise."""
+
+        noErrors = True
+
+        newFile = open(filePath, "w+")  #create the new file
+        newFile.close()
+
+        noErrors = self.writeToFile( filePath )
+
+        return noErrors
+
+    #~signals~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    noteFileChanged = pyqtSignal([str])

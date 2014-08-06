@@ -75,7 +75,9 @@ class MainWindow(QMainWindow):
         self.action["Open"] = self.menu["File"].addAction("Open")
         self.action["Open"].setShortcut( QKeySequence.Open )
         self.action["Save"] = self.menu["File"].addAction("Save")
+        self.action["Save"].setShortcut( QKeySequence.Save )
         self.action["Save As"] = self.menu["File"].addAction("Save As")
+        self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
         self.action["Save Copy As"] = self.menu["File"].addAction("Save Copy As")
         self.menu["File"].addSeparator()
         self.action["Preview"] = self.menu["File"].addAction("Preview")
@@ -128,8 +130,16 @@ class MainWindow(QMainWindow):
         #connect signals to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutOnAction)
-        self.noteEditor.textChanged.connect(self.updatePreview)
         self.action["Open"].triggered.connect(self.openFileAction)
+        self.action["Save"].triggered.connect(self.saveFileAction)
+        self.action["Save As"].triggered.connect(self.saveAsFileAction)
+        self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
+
+        self.noteEditor.textChanged.connect(self.updatePreview)
+        self.noteEditor.noteFileChanged.connect(self.changeTitle)
+
+        #last minute configs
+        self.changeTitle("")    #set default window title
 
 
     def changeLayoutOnAction(self, action):
@@ -176,7 +186,41 @@ class MainWindow(QMainWindow):
     def openFileAction(self):
         """Open an existing file by getting its path from a dialog."""
 
-        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])                #get the search directory
-        filePath = QFileDialog.getOpenFileName(self, "Quark: Open File", searchPath)#get the file path from the user (note: 'filePath' is a tuple)
-        if filePath[0] != "":                                                       #if the user did not hit the 'cancel' button
-            self.noteEditor.openFileRequest(filePath[0])                                #open the file in the editor
+        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])            #get the search directory
+        filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
+        if filePath[0] != "":                                                   #if the user did not hit the 'cancel' button
+            self.noteEditor.openFileRequest(filePath[0])                            #open the file in the editor
+
+    def saveFileAction(self):
+        """Save text in editor to note."""
+
+        if self.noteEditor.noteFilePath == "":  #if the file has not been saved yet, do a 'save as' instead
+            self.saveAsFileAction()
+        else:                                   #else, just save the file
+            self.noteEditor.saveFileRequest()
+
+
+    def saveAsFileAction(self):
+        """Save text in editor to a new note and load it."""
+
+        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])            #get the search directory
+        filePath = QFileDialog.getSaveFileName(self, "Save As File", searchPath)#prompt the use for the new file path
+        if filePath[0] != "":                                                   #do not perform the save if the user pressed the 'cancel' button
+            self.noteEditor.saveAsRequested(filePath[0])
+
+    def saveCopyAsAction(self):
+        """Save text in editor to a new note but do not load it."""
+
+        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])
+        filePath = QFileDialog.getSaveFileName(self, "Save Copy As", searchPath)
+        if filePath[0] != "":
+            self.noteEditor.saveCopyAsRequested(filePath[0])
+
+    def changeTitle(self, noteFilePath):
+        """Change the window title based on the path to the open note.  Title is of the form: file_name.ext- Quark Note Taker"""
+
+        titleTail = " - Quark Note Taker"   #store portion of window title that is common to all cases (goes at the end of title)
+        if noteFilePath == "":              #if no file is specified (new note and file has not been saved  yet), set the file name to be 'Untitled'
+            self.setWindowTitle("Untitled" + titleTail)
+        else:                               #else, get the file name for the file path
+            self.setWindowTitle(os.path.basename(noteFilePath) + titleTail)
