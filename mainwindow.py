@@ -40,6 +40,7 @@ License:
 #python modules
 import sys
 import os
+from time import sleep
 
 #extra modules
 import markdown
@@ -140,6 +141,7 @@ class MainWindow(QMainWindow):
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
+        self.noteEditor.verticalScrollBar().valueChanged.connect(self.changePreviewScrollOnEditorScroll)
 
         self.notePreview.page().linkClicked.connect(self.linkClickHandler)
 
@@ -249,3 +251,31 @@ class MainWindow(QMainWindow):
         """Handles links clicked (in note preview) which do not point to local files."""
 
         QDesktopServices.openUrl( url );
+
+
+    def changePreviewScrollOnEditorScroll(self, scrollPosition):
+        """Scrolles note preview when editor is scrolled ('scrollPosition' is not used)."""
+
+        self.scrollPreview()
+
+
+    def changePreviewScrollOnLoadFinished(self, ok):
+        """Scrolles note preview when page is reloaded ('ok' is not used)."""
+
+        self.scrollPreview()
+
+
+    def scrollPreview(self):
+        """Scrolles note preview to same 'height' as editor."""
+
+        editorVal = self.noteEditor.verticalScrollBar().value()
+        if editorVal == 0:
+            viewVal = 0
+        else:
+            editorMax = self.noteEditor.verticalScrollBar().maximum()
+            editorMin = self.noteEditor.verticalScrollBar().minimum()
+            viewMax = self.notePreview.page().mainFrame().scrollBarMaximum(Qt.Vertical)
+            viewMin = self.notePreview.page().mainFrame().scrollBarMinimum(Qt.Vertical)
+            viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
+
+        self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal)
