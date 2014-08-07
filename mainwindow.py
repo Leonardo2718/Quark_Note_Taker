@@ -206,6 +206,8 @@ class MainWindow(QMainWindow):
         else:                                   #else, just save the file
             self.noteEditor.saveFileRequest()
 
+        self.scrollPreview()
+
 
     def saveAsFileAction(self):
         """Save text in editor to a new note and load it."""
