@@ -205,8 +205,7 @@ class MainWindow(QMainWindow):
             self.saveAsFileAction()
         else:                                   #else, just save the file
             self.noteEditor.saveFileRequest()
-
-        self.scrollPreview()
+            self.scrollPreview()                    #scroll preview to edited line
 
 
     def saveAsFileAction(self):
@@ -217,6 +216,8 @@ class MainWindow(QMainWindow):
         if filePath[0] != "":                                                   #do not perform the save if the user pressed the 'cancel' button
             self.noteEditor.saveAsRequested(filePath[0])
 
+        self.scrollPreview()                                                    #scroll preview to edited line
+
     def saveCopyAsAction(self):
         """Save text in editor to a new note but do not load it."""
 
@@ -224,6 +225,8 @@ class MainWindow(QMainWindow):
         filePath = QFileDialog.getSaveFileName(self, "Save Copy As", searchPath)
         if filePath[0] != "":
             self.noteEditor.saveCopyAsRequested(filePath[0])
+
+        self.scrollPreview()    #scroll preview to edited line
 
     def changeTitle(self, noteFilePath):
         """Change the window title based on the path to the open note.  Title is of the form: file_name.ext- Quark Note Taker"""
