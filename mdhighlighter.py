@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mdhighlighter.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 3, 2014
+Last Modified: August 7, 2014
 
 Description:
     This file contains the class used to perform syntax highlighting on the markdown note editor.
@@ -79,7 +79,7 @@ is highlighted using the 'setFormat(start, count, format)' method."""
 
         #rules for single items (in the format 'expression')
         self.itemRules = {
-            "list_item": QRegularExpression("^(( {0,3})>)?\\s*[\\*\\-:]\\s"),
+            "list_item": QRegularExpression("^(( {0,3})>)?\\s*[\\*\\-+:]\\s"),
             "header": QRegularExpression("^(#{1,6}|\\-+|=+\\s*$)"),
             "hard_break": QRegularExpression("^( {1,3}(\\-\\s){3,}| {0,3}(\\s*\\*){3,}| {0,3}_{3,})\\s*$"),
             "toc": QRegularExpression("\\[TOC\\]")
@@ -174,7 +174,7 @@ line/block of the document every time the text changes."""
                 self.setFormat(ruleMatch.capturedStart(), ruleMatch.capturedLength(), textFormat)
                 ruleMatch = rule.match(text, ruleMatch.capturedEnd() + 1)
 
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        #%% I have left the highlighting code "un-clean" because I plan %%
-        #%% on implementing some major changes in the future.           %%
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        #%% I have left the highlighting code "un-cleaned" because I %%
+        #%% plan on implementing some major changes in the future.   %%
+        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

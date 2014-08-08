@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 6, 2014
+Last Modified: August 7, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -40,7 +40,6 @@ License:
 #python modules
 import sys
 import os
-from time import sleep
 
 #extra modules
 import markdown
@@ -82,7 +81,6 @@ class MainWindow(QMainWindow):
         self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
         self.action["Save Copy As"] = self.menu["File"].addAction("Save Copy As")
         self.menu["File"].addSeparator()
-        self.action["Preview"] = self.menu["File"].addAction("Preview")
 
         self.actionGroup = {"display mode": QActionGroup(self) }
         self.action["View Mode"] = self.actionGroup["display mode"].addAction("View Mode")
@@ -186,9 +184,11 @@ class MainWindow(QMainWindow):
 
         return htmlDoc
 
+
     def updatePreview(self):
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+
 
     def openFileAction(self):
         """Open an existing file by getting its path from a dialog."""
@@ -197,6 +197,7 @@ class MainWindow(QMainWindow):
         filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
         if filePath[0] != "":                                                   #if the user did not hit the 'cancel' button
             self.noteEditor.openFileRequest(filePath[0])                            #open the file in the editor
+
 
     def saveFileAction(self):
         """Save text in editor to note."""
@@ -218,6 +219,7 @@ class MainWindow(QMainWindow):
 
         self.scrollPreview()                                                    #scroll preview to edited line
 
+
     def saveCopyAsAction(self):
         """Save text in editor to a new note but do not load it."""
 
@@ -228,6 +230,7 @@ class MainWindow(QMainWindow):
 
         self.scrollPreview()    #scroll preview to edited line
 
+
     def changeTitle(self, noteFilePath):
         """Change the window title based on the path to the open note.  Title is of the form: file_name.ext- Quark Note Taker"""
 
@@ -236,6 +239,7 @@ class MainWindow(QMainWindow):
             self.setWindowTitle("Untitled" + titleTail)
         else:                               #else, get the file name for the file path
             self.setWindowTitle(os.path.basename(noteFilePath) + titleTail)
+
 
     def newNoteAction(self):
         """Create a new note.  Automatically saves old note."""
@@ -251,6 +255,7 @@ class MainWindow(QMainWindow):
             noteFile.close()                    #
 
             self.noteEditor.openFileRequest(filePath[0])    #open newly created file
+
 
     def linkClickHandler(self, url):
         """Handles links clicked (in note preview) which do not point to local files."""
@@ -273,14 +278,14 @@ class MainWindow(QMainWindow):
     def scrollPreview(self):
         """Scrolles note preview to same 'height' as editor."""
 
-        editorVal = self.noteEditor.verticalScrollBar().value()
-        if editorVal == 0:
+        editorVal = self.noteEditor.verticalScrollBar().value()     #get the scroll height of the editor window
+        if editorVal == 0:                                          #if it is '0' then just seth the height of the preview window to '0' also (can prevent division by zero error)
             viewVal = 0
-        else:
+        else:                                                       #otherwise calculate the corresponding scroll height for the preview window
             editorMax = self.noteEditor.verticalScrollBar().maximum()
             editorMin = self.noteEditor.verticalScrollBar().minimum()
             viewMax = self.notePreview.page().mainFrame().scrollBarMaximum(Qt.Vertical)
             viewMin = self.notePreview.page().mainFrame().scrollBarMinimum(Qt.Vertical)
             viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
 
-        self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal)
+        self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window

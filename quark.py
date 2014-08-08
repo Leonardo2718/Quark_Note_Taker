@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quark.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 3, 2014
+Last Modified: August 7, 2014
 
 Description:
     Quark Note Taker is an opensource note taking application.  Notes are stored
@@ -85,8 +85,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-    """)
+THE SOFTWARE.""")
 
     #execute the app
     win.show()
