@@ -79,7 +79,7 @@ is highlighted using the 'setFormat(start, count, format)' method."""
 
         #rules for single items (in the format 'expression')
         self.itemRules = {
-            "list_item": QRegularExpression("^(( {0,3})>)?\\s*[\\*\\-+:]\\s"),
+            "list_item": QRegularExpression("^(( {0,3})>)?\\s*[\\*\\-\\+:]\\s"),
             "header": QRegularExpression("^(#{1,6}|\\-+|=+\\s*$)"),
             "hard_break": QRegularExpression("^( {1,3}(\\-\\s){3,}| {0,3}(\\s*\\*){3,}| {0,3}_{3,})\\s*$"),
             "toc": QRegularExpression("\\[TOC\\]")
@@ -89,7 +89,8 @@ is highlighted using the 'setFormat(start, count, format)' method."""
         self.spanRules = {
             "link": QRegularExpression("!?\\[[^\\n]*\\](\\([^\\n]*\\)|\\[[^\\n]*\\])"),
             "link_id": QRegularExpression("^( {0,3})\\[[^\\s]*\\]:\\s*[^\\s]+(\\s+(\"[^\"\\n]*\"|\'[^\"\\n]*\'|\([^\"\\n]*\)))?"),
-            "emphasis": QRegularExpression("\\s((\\*)[^\\n\\s]+(\\*)|(\\*)(\\*)[^\\n\\s]*(\\*)(\\*)|_[^\\n\\s]*_|__[^\\n\\s]*__)\\s"),
+            #"emphasis": QRegularExpression("\\s((\\*)[^\\n\\*]+(\\*)|(\\*)(\\*)[^\\n*]*(\\*)(\\*)|_[^\\n_]*_|__[^\\n_]*__)\\s"),
+            "emphasis": QRegularExpression("(\\s?\\*[^\\s])([^*]*)([^\\s]\\*\\s?)|(\\s?\\*{2}[^\\s])([^*]*)([^\\s]\\*{2}\\s?)|(\\s_[^\\s])([^_]*)([^\\s]_\\s?)|(\\s?_{2}[^\\s])([^_]*)([^\\s]\\_{2}\\s)"),
             "code": QRegularExpression("`[^\\n`]+`|``[^\\n]*``"),
             "math": QRegularExpression("\\$[^\\n\\$]+\\$")
         }

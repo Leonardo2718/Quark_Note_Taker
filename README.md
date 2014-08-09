@@ -44,6 +44,9 @@ Make sure you have these installed as **Quark needs them** in order to work:
 1. When editing a note, every time a change is made, the live preview jumps to the
 top of the document.  Scrolling the editor window will restore the preview to the
 correct position.  You can also save the note (`Ctrl+S`)  to restore the preview.
+2. There is a problem highlighting the syntax of nested emphasis when the same symbols
+are used such as `_emphasized __and__ strong_` so use `_emphasized **and** strong_` 
+instead.
 
 ##License
 Quark Note Taker is licensed under the MIT License.
