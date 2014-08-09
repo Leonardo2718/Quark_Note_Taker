@@ -187,6 +187,13 @@ class MainWindow(QMainWindow):
 
     def updatePreview(self):
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
+        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        #%% Some debug code that outputs the HTML to a file %%
+        htmlFile = open("_output.html", "w+")
+        htmlFile.write(htmlDocument)
+        htmlFile.close()
+        #%%                                                 %%
+        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
 
 
