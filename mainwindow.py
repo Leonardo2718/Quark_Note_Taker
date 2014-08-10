@@ -95,6 +95,11 @@ class MainWindow(QMainWindow):
         self.menu["View"].addAction( self.action["Edit/View Mode"] )
 
         self.menu["View"].addSeparator()
+        self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview Vertically")
+        self.action["View Editor/Preview Vertically"].setCheckable(True)
+        self.action["View Editor/Preview Vertically"].setChecked(False)
+
+        self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("Note Manager")
         self.action["Note Manager"].setCheckable(True)
         self.action["Note Manager"].setChecked(False)
@@ -131,7 +136,8 @@ class MainWindow(QMainWindow):
 
         #connect signals to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
-        self.actionGroup["display mode"].triggered.connect(self.changeLayoutOnAction)
+        self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
+        self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
         self.action["Open"].triggered.connect(self.openFileAction)
         self.action["Save"].triggered.connect(self.saveFileAction)
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
@@ -148,7 +154,7 @@ class MainWindow(QMainWindow):
         self.changeTitle("")    #set default window title
 
 
-    def changeLayoutOnAction(self, action):
+    def changeLayoutModeOnAction(self, action):
         """Changes the layout of the editing area (editor + preview window) based on the 'view' menu action triggered."""
 
         if action == self.action["View Mode"] :         #if the user choses to only display the note preview
@@ -162,6 +168,14 @@ class MainWindow(QMainWindow):
         elif action == self.action["Edit/View Mode"] :  #if the user choses to display both the note editor and note preview
             self.noteEditor.setVisible(True)
             self.notePreview.setVisible(True)
+
+
+    def changeNoteDirectionOnAction(self, isVertical):
+        """Changes direction (horizontal/vertical) of the note editor and previewer."""
+        if not isVertical:
+            self.noteArea.setOrientation(Qt.Horizontal)
+        elif isVertical:
+            self.noteArea.setOrientation(Qt.Vertical)
 
 
     def mdNoteToHtml(self, noteMarkdown):
