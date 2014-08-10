@@ -100,33 +100,34 @@ class MainWindow(QMainWindow):
         self.action["Note Manager"].setChecked(False)
 
         #setup layout
-        self.centralWidget = QSplitter(self)
+        self.centralWidget = QSplitter(self)                #widget container to hold all others
         self.centralWidget.setOrientation(Qt.Horizontal)
         self.centralWidget.setChildrenCollapsible(False)
         self.setCentralWidget(self.centralWidget)
 
-        self.noteManager = QTreeView(self.centralWidget)
+        self.noteManager = QTreeView(self.centralWidget)    #widget to manage notes in a tree style display
         self.noteManager.setVisible(False)
         self.centralWidget.addWidget(self.noteManager)
 
-        self.editingArea = QSplitter(self.centralWidget)
-        #self.editingArea.setOrientation(Qt.Vertical)
-        self.editingArea.setOrientation(Qt.Horizontal)
-        self.editingArea.setChildrenCollapsible(False)
-        self.centralWidget.addWidget(self.editingArea)
+        self.noteArea = QSplitter(self.centralWidget)       #area in which note editor and previewer are
+        #self.noteArea.setOrientation(Qt.Vertical)
+        self.noteArea.setOrientation(Qt.Horizontal)
+        self.noteArea.setChildrenCollapsible(False)
+        self.centralWidget.addWidget(self.noteArea)
 
-        self.noteEditor = NoteEditor(self.editingArea)
+        self.noteEditor = NoteEditor(self.noteArea)         #note editing widget
+        editorSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        editorSizePolicy.setHorizontalStretch(3)
+        self.noteEditor.setSizePolicy(editorSizePolicy)
 
-        #outputFile = open("out.html", "w")
-        #outputFile.write(htmlDoc)
-        #outputFile.close()
-
-        self.notePreview = QWebView(self.editingArea)
+        self.notePreview = QWebView(self.noteArea)          #note preview widget
         self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
-        #self.notePreview.setHtml( htmlDoc,  QUrl("file://" + os.getcwd() + "/") )
+        previewSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        previewSizePolicy.setHorizontalStretch(1)
+        self.notePreview.setSizePolicy(previewSizePolicy)
 
-        self.editingArea.addWidget(self.noteEditor)
-        self.editingArea.addWidget(self.notePreview)
+        self.noteArea.addWidget(self.noteEditor)
+        self.noteArea.addWidget(self.notePreview)
 
         #connect signals to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
