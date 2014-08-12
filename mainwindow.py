@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 7, 2014
+Last Modified: August 11, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         self.menu["View"].addAction( self.action["Edit Mode"] )
         self.action["Edit/View Mode"] = self.actionGroup["display mode"].addAction("Edit/View Mode")
         self.action["Edit/View Mode"].setCheckable(True)
-        self.action["Edit/View Mode"].setChecked(True)
+        #self.action["Edit/View Mode"].setChecked(True)
         self.menu["View"].addAction( self.action["Edit/View Mode"] )
 
         self.menu["View"].addSeparator()
@@ -151,7 +151,8 @@ class MainWindow(QMainWindow):
         self.notePreview.page().linkClicked.connect(self.linkClickHandler)
 
         #last minute configs
-        self.changeTitle("")    #set default window title
+        self.changeTitle("")        #set default window title
+        self.loadDefaultSettings()  #loads default settings
 
 
     def changeLayoutModeOnAction(self, action):
@@ -311,3 +312,8 @@ class MainWindow(QMainWindow):
             viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
 
         self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
+
+    def loadDefaultSettings(self):
+        viewModeAction = self.action[ quarkExtra.config["defaults"]["viewMode"] ]   #get view mode action
+        viewModeAction.setChecked(True)                                             #check the action in the menu
+        self.changeLayoutModeOnAction(viewModeAction)                               #set the layout
