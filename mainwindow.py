@@ -97,12 +97,12 @@ class MainWindow(QMainWindow):
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview Vertically")
         self.action["View Editor/Preview Vertically"].setCheckable(True)
-        self.action["View Editor/Preview Vertically"].setChecked(False)
+        #self.action["View Editor/Preview Vertically"].setChecked(False)
 
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("Note Manager")
         self.action["Note Manager"].setCheckable(True)
-        self.action["Note Manager"].setChecked(False)
+        #self.action["Note Manager"].setChecked(False)
 
         #setup layout
         self.centralWidget = QSplitter(self)                #widget container to hold all others
@@ -111,24 +111,26 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         self.noteManager = QTreeView(self.centralWidget)    #widget to manage notes in a tree style display
-        self.noteManager.setVisible(False)
+        #self.noteManager.setVisible(False)
         self.centralWidget.addWidget(self.noteManager)
 
         self.noteArea = QSplitter(self.centralWidget)       #area in which note editor and previewer are
         #self.noteArea.setOrientation(Qt.Vertical)
-        self.noteArea.setOrientation(Qt.Horizontal)
+        #self.noteArea.setOrientation(Qt.Horizontal)
         self.noteArea.setChildrenCollapsible(False)
         self.centralWidget.addWidget(self.noteArea)
 
         self.noteEditor = NoteEditor(self.noteArea)         #note editing widget
         editorSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         editorSizePolicy.setHorizontalStretch(3)
+        editorSizePolicy.setVerticalStretch(3)
         self.noteEditor.setSizePolicy(editorSizePolicy)
 
         self.notePreview = QWebView(self.noteArea)          #note preview widget
         self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
         previewSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         previewSizePolicy.setHorizontalStretch(1)
+        previewSizePolicy.setVerticalStretch(1)
         self.notePreview.setSizePolicy(previewSizePolicy)
 
         self.noteArea.addWidget(self.noteEditor)
@@ -313,7 +315,25 @@ class MainWindow(QMainWindow):
 
         self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
 
+
     def loadDefaultSettings(self):
-        viewModeAction = self.action[ quarkExtra.config["defaults"]["viewMode"] ]   #get view mode action
-        viewModeAction.setChecked(True)                                             #check the action in the menu
-        self.changeLayoutModeOnAction(viewModeAction)                               #set the layout
+        """Load some default settings."""
+
+        viewModeAction = self.action[ quarkExtra.config["defaultViewMode"] ]    #get view mode action
+        viewModeAction.setChecked(True)                                         #check the action in the menu
+        self.changeLayoutModeOnAction(viewModeAction)                           #set the layout
+
+        if quarkExtra.config["displayNoteManager"] == "true":       #get whether to display the note manager
+            self.action["Note Manager"].setChecked(True)
+            self.noteManager.setVisible(True)
+        elif quarkExtra.config["displayNoteManager"] == "false":
+            self.action["Note Manager"].setChecked(False)
+            self.noteManager.setVisible(False)
+
+        if quarkExtra.config["noteDisplayDirection"] == "vertical":         #get whether to display note verticaly or horizontally
+            self.action["View Editor/Preview Vertically"].setChecked(True)
+            self.changeNoteDirectionOnAction(True)
+        elif quarkExtra.config["noteDisplayDirection"] == "horizontal":
+            self.action["View Editor/Preview Vertically"].setChecked(False)
+            self.changeNoteDirectionOnAction(False)
+

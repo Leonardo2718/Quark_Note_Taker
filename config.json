@@ -3,7 +3,7 @@
     "end_html_template_file": "html-template/htmlDoc_end.html",
     "notes_dir": ".",
     "theme_file": "themes/default.css",
-    "defaults": {
-        "viewMode": "Edit/View Mode"
-    }
+    "defaultViewMode": "Edit/View Mode",
+    "displayNoteManager": "true",
+    "noteDisplayDirection": "vertical"
 }
