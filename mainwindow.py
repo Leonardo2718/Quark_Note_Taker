@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 11, 2014
+Last Modified: August 12, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -155,6 +155,29 @@ class MainWindow(QMainWindow):
         #last minute configs
         self.changeTitle("")        #set default window title
         self.loadDefaultSettings()  #loads default settings
+
+
+    def closeEvent(self, event):
+        """Cleanup and close the main window."""
+
+        #get current config
+        if self.action["Note Manager"].isChecked():
+            quarkExtra.config["displayNoteManager"] = "true"
+        else:
+            quarkExtra.config["displayNoteManager"] = "false"
+
+        if self.action["View Editor/Preview Vertically"].isChecked():
+            quarkExtra.config["noteDisplayDirection"] = "true"
+        else:
+            quarkExtra.config["noteDisplayDirection"] = "false"
+
+        quarkExtra.config["defaultViewMode"] = self.actionGroup["display mode"].checkedAction().text()
+
+        #save current config
+        quarkExtra.saveCurrentConfigSettings()
+
+        #call parent method
+        super(MainWindow, self).closeEvent(event)
 
 
     def changeLayoutModeOnAction(self, action):

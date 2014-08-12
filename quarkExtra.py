@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarkExtra.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 7, 2014
+Last Modified: August 12, 2014
 
 Description:
     This file contains extra global data and functions for other Quark source files.
@@ -43,6 +43,17 @@ import json
 #~extra data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #load config data from JSON  config file
-configFile = open("config.json")
+configFile = open("config.json", "r")
 config = json.loads( configFile.read() )
 configFile.close()
+
+#function to save changed settings
+def saveCurrentConfigSettings(data=None):
+    """Write changed configs to the config file."""
+
+    configFile = open("config.json", "w")
+    if data == None:
+        data = config
+    jsonData = json.dumps(data, sort_keys=True, indent = 4)
+    configFile.write( jsonData )
+    configFile.close()
