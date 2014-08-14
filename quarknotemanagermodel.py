@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 13, 2014
+Last Modified: August 14, 2014
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -135,9 +135,10 @@ inside its parent."""
 
         count = 0
 
-        if parentIndex.isValid() and type(parentIndex.internalPointer()) is QuarkNotebookModel: #if the index provided is valid and the item is a notebook
-            notebook  = parentIndex.internalPointer()                   #get the notebook
-            count = notebook.noteCount()                                #get the number of notes
+        if parentIndex.isValid():                       #if the index provided is valid
+            if type(parentIndex.internalPointer()) is QuarkNotebookModel:#if the item is a notebook
+                notebook  = parentIndex.internalPointer()                   #get the notebook
+                count = notebook.noteCount()                                #get the number of notes
         else:                                           #else, the item must be root
             count = len(self._noteList) + len(self._notebookList)
 
