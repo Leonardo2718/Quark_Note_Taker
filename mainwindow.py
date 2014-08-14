@@ -104,6 +104,7 @@ class MainWindow(QMainWindow):
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("Note Manager")
         self.action["Note Manager"].setCheckable(True)
+        self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
         #self.action["Note Manager"].setChecked(False)
 
         #setup layout
