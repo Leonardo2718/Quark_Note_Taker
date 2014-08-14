@@ -166,6 +166,8 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         """Cleanup and close the main window."""
 
+        self.saveFileAction()   #save the current note
+
         #get current config
         if self.action["Note Manager"].isChecked():
             quarkExtra.config["displayNoteManager"] = "true"
@@ -246,6 +248,8 @@ class MainWindow(QMainWindow):
 
     def openFileAction(self):
         """Open an existing file by getting its path from a dialog."""
+
+        self.saveFileAction()   #save the current note
 
         searchPath = os.path.abspath(quarkExtra.config["notes_dir"])            #get the search directory
         filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
@@ -369,6 +373,8 @@ class MainWindow(QMainWindow):
 
     def openNoteFromManager(self, itemIndex):
         """If the item passed is a note, the note is opened for edit.  Otherwise, nothin is done."""
+
+        self.saveFileAction()   #save the current note
 
         if itemIndex.isValid() and type(itemIndex.internalPointer()) is QuarkNoteModel: #if the item index is valid and points to note
             note = itemIndex.internalPointer()                                              #get the note
