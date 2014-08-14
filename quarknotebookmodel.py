@@ -64,13 +64,17 @@ note manager."""
         self._notebookDir = QFileInfo(dirPath)  #store path to the notebook as a 'QFileInfo' for added flexibility
         q = QFileIconProvider()                 #objec used to create model display icon
         self._icon = q.icon(self._notebookDir)  #create model display icon
-        #self._parent = None                     #notebooks must be children of model root and therefore do not have a defined parent
         self._notes = []                        #initialize empty list of notes
 
-        for rootDir, dirs, files in os.walk( self._notebookDir.absoluteFilePath() ):    #expand data from directory walk (loop only executes once)
-            for note in files:                                                              #loop through every file found
-                notePath = os.path.join(rootDir, note)                                          #get absolute path of the note
-                self._notes.append( QuarkNoteModel(notePath, self) )                            #append a new note to the notes list
+        notebookPath = self._notebookDir.absoluteFilePath() #get the absolute path to the notebook
+
+        #load all the notes inside this notebook
+        for item in os.listdir(notebookPath):               #for every item in the notebook
+
+            itemPath = os.path.join(notebookPath, item)         #get absolute path to the item
+
+            if os.path.isfile(itemPath):                        #if the item is a file/note
+                self._notes.append( QuarkNoteModel(itemPath, self) )    #append a new note to the notes list
 
 
     def noteAt(self, i):
@@ -98,10 +102,3 @@ note manager."""
         """Returns the icon to be displayed in the Quark note manager."""
 
         return self._icon
-
-
-#    def getParent(self):
-#        """Returns the parent notebook.  Because notebooks must be in the root
-#of the model 'None' is always returned."""
-#
-#        return self._parent

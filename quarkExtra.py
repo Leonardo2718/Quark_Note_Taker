@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarkExtra.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 12, 2014
+Last Modified: August 14, 2014
 
 Description:
     This file contains extra global data and functions for other Quark source files.
@@ -37,7 +37,14 @@ License:
 
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#python modules
+import os
 import json
+
+#Qt objects
+#from PyQt5.QtCore import QString
+#from PyQt5.QtGui import *
+#from PyQt5.QtWidgets import *
 
 
 #~extra data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,3 +64,10 @@ def saveCurrentConfigSettings(data=None):
     jsonData = json.dumps(data, sort_keys=True, indent = 4)
     configFile.write( jsonData )
     configFile.close()
+
+def makeAbsoluteFromHome(pathString):
+    """Returns an absolute path string by replacing a '~' with the path
+to the users home directory.  If 'pathString' does not contain a '~', then
+the string itself is returned."""
+
+    return os.path.expanduser(pathString)

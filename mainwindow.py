@@ -55,6 +55,7 @@ from PyQt5.QtWebKitWidgets import *
 import quarkExtra
 from noteeditor import NoteEditor
 from quarknotemanagermodel import QuarkNoteManagerModel
+from quarknotemodel import QuarkNoteModel
 
 
 
@@ -153,6 +154,8 @@ class MainWindow(QMainWindow):
         self.noteEditor.verticalScrollBar().valueChanged.connect(self.changePreviewScrollOnEditorScroll)
 
         self.notePreview.page().linkClicked.connect(self.linkClickHandler)
+
+        self.noteManager.doubleClicked.connect(self.openNoteFromManager)
 
         #last minute configs
         self.changeTitle("")        #set default window title
@@ -362,3 +365,11 @@ class MainWindow(QMainWindow):
             self.action["View Editor/Preview Vertically"].setChecked(False)
             self.changeNoteDirectionOnAction(False)
 
+
+    def openNoteFromManager(self, itemIndex):
+        """If the item passed is a note, the note is opened for edit.  Otherwise, nothin is done."""
+
+        if itemIndex.isValid() and type(itemIndex.internalPointer()) is QuarkNoteModel: #if the item index is valid and points to note
+            note = itemIndex.internalPointer()                                              #get the note
+            notePath = note.getFilePath()                                                   #get path to the note file
+            self.noteEditor.openFileRequest(notePath)                                       #open the note file

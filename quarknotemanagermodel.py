@@ -47,6 +47,7 @@ from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
 #from PyQt5.QtWidgets import *
 
 #Quark specific
+import quarkExtra
 from quarknotebookmodel import QuarkNotebookModel
 from quarknotemodel import QuarkNoteModel
 
@@ -86,8 +87,21 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
         super(QuarkNoteManagerModel, self).__init__(parent)
 
-        self._noteList = [QuarkNoteModel("README.md")]
-        self._notebookList = [QuarkNotebookModel("themes")]
+        self._noteList = []     #initialize empty list of notes
+        self._notebookList = [] #initialize empty list of notebooks
+
+        notesDir = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])  #get the Quark notes directory from the config file
+
+        #load all the notes and notebooks from the notes directory
+        for item in os.listdir(notesDir):                   #for every item in the notes directory
+
+            itemPath = os.path.join(notesDir, item)             #get absolute path to the item
+
+            if os.path.isfile(itemPath):                        #if the item is a file/note
+                self._noteList.append( QuarkNoteModel(itemPath) )           #append a new note to the notes list
+
+            elif os.path.isdir(itemPath):                       #if the item is directory/notebook
+                self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
 
 
     def index(self, row, column, itemParent = QModelIndex() ):
@@ -124,7 +138,7 @@ inside its parent."""
                                                                                             #  in which case it could be in a notebook and have a parent
             note = itemIndex.internalPointer()          #get the note
             noteParent = note.getParent()               #get the parent
-            if not (noteParent is None):                #if the note has not defined parent, then its parent must be the model root
+            if not (noteParent is None):                #if the note has no defined parent, then its parent must be the model root
                 indexRow = self._notebookList.index(noteParent)         #get the list/row index of the parent (which must be in the root of the model)
                 returnIndex = self.createIndex(indexRow, 0, noteParent) #create the parent index
 
@@ -164,3 +178,15 @@ model, this method always returns '1'."""
             data = QVariant( itemIndex.internalPointer().getIcon() )
 
         return data
+
+
+    def headerData(self, section, orientation, role = Qt.DisplayRole):
+        """Returns data for the model display header."""
+
+        data = QVariant()       #initialize return data
+
+        if role == Qt.DisplayRole:              #if display data is requested
+            if section == 0:                        #if data for the first column is requested
+                data = QVariant("Quark Notes and Notebooks")    #set the data
+
+        return data             #return the data

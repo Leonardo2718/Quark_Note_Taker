@@ -3,7 +3,7 @@
     "displayNoteManager": "true",
     "end_html_template_file": "html-template/htmlDoc_end.html",
     "noteDisplayDirection": "false",
-    "notes_dir": ".",
+    "notes_dir": "~/QuarkNotes",
     "start_html_template_file": "html-template/htmlDoc_start.html",
     "theme_file": "themes/default.css"
 }
