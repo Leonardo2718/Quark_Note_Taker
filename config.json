@@ -1,6 +1,6 @@
 {
     "defaultViewMode": "Edit/View Mode",
-    "displayNoteManager": "false",
+    "displayNoteManager": "true",
     "end_html_template_file": "html-template/htmlDoc_end.html",
     "noteDisplayDirection": "false",
     "notes_dir": ".",

@@ -54,6 +54,7 @@ from PyQt5.QtWebKitWidgets import *
 #Quark specific
 import quarkExtra
 from noteeditor import NoteEditor
+from quarknotemanagermodel import QuarkNoteManagerModel
 
 
 
@@ -112,6 +113,7 @@ class MainWindow(QMainWindow):
 
         self.noteManager = QTreeView(self.centralWidget)    #widget to manage notes in a tree style display
         #self.noteManager.setVisible(False)
+        self.noteManager.setModel(QuarkNoteManagerModel(self))
         self.centralWidget.addWidget(self.noteManager)
 
         self.noteArea = QSplitter(self.centralWidget)       #area in which note editor and previewer are
