@@ -120,12 +120,13 @@ inside its parent."""
 
         returnIndex = QModelIndex()     #index to be returned
 
-        if itemIndex.isValid():                     #only check for parent if index is valid
-            item = itemIndex.internalPointer()          #get the item
-            parentItem = item.getParent()               #get the parent
-            if not (parentItem is None):                #only compute parent index of parent if it exists
-                indexRow = self._notebookList.index(notebook)           #get the list/row index of the parent
-                returnIndex = self.createIndex(indexRow, 0, notebook)   #create the parent index
+        if itemIndex.isValid()  and type(itemIndex.internalPointer()) is QuarkNoteModel:    #only check for parent if index is valid and item is a note,
+                                                                                            #  in which case it could be in a notebook and have a parent
+            note = itemIndex.internalPointer()          #get the note
+            noteParent = note.getParent()               #get the parent
+            if not (noteParent is None):                #if the note has not defined parent, then its parent must be the model root
+                indexRow = self._notebookList.index(noteParent)         #get the list/row index of the parent (which must be in the root of the model)
+                returnIndex = self.createIndex(indexRow, 0, noteParent) #create the parent index
 
         return returnIndex
 

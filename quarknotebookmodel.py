@@ -46,6 +46,10 @@ from PyQt5.QtCore import QFileInfo
 #from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QFileIconProvider
 
+#Quark specific
+import quarkExtra
+from quarknotemodel import QuarkNoteModel
+
 
 #~notebook model class~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -57,17 +61,22 @@ note manager."""
     def __init__(self, dirPath):
         """Initialize data for the model."""
 
-        self._notebookDir = QFileInfo(dirPath)
-        q = QFileIconProvider()
-        self._icon = q.icon(self._notebookDir)
-        self._notes = []
-        self._parent = None
+        self._notebookDir = QFileInfo(dirPath)  #store path to the notebook as a 'QFileInfo' for added flexibility
+        q = QFileIconProvider()                 #objec used to create model display icon
+        self._icon = q.icon(self._notebookDir)  #create model display icon
+        #self._parent = None                     #notebooks must be children of model root and therefore do not have a defined parent
+        self._notes = []                        #initialize empty list of notes
+
+        for rootDir, dirs, files in os.walk( self._notebookDir.absoluteFilePath() ):    #expand data from directory walk (loop only executes once)
+            for note in files:                                                              #loop through every file found
+                notePath = os.path.join(rootDir, note)                                          #get absolute path of the note
+                self._notes.append( QuarkNoteModel(notePath, self) )                            #append a new note to the notes list
 
 
     def noteAt(self, i):
         """Returns the note at a given index."""
 
-        if i > 0 and i < len(self._notes):
+        if i >= 0 and i < len(self._notes):
             return self._notes[i]
         else:
             return None
@@ -91,8 +100,8 @@ note manager."""
         return self._icon
 
 
-    def getParent(self):
-        """Returns the parent notebook.  Because notebooks must be in the root
-of the model 'None' is always returned."""
-
-        return self._parent
+#    def getParent(self):
+#        """Returns the parent notebook.  Because notebooks must be in the root
+#of the model 'None' is always returned."""
+#
+#        return self._parent
