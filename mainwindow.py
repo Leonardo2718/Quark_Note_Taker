@@ -162,10 +162,11 @@ class MainWindow(QMainWindow):
         self.changeTitle("")        #set default window title
         self.loadDefaultSettings()  #loads default settings
 
-        #setup timer to trigger autosave (will autosave every 5min)
-        self.autosaveTimer = QTimer(self)       #create the timer
-        self.autosaveTimer.timeout.connect(self.saveFileAction) #connect the timer to the save method
-        self.autosaveTimer.start(300000)        #set the interval to be 5min (5min = 300000ms)
+        #setup timer to trigger autosave
+        self.autosaveTimer = QTimer(self)                           #create the timer
+        self.autosaveTimer.timeout.connect(self.saveFileAction)     #connect the timer to the save method
+        autosave_interval = int(quarkExtra.config["autosave_every"])#get the time interval from the config file (in milliseconds)
+        self.autosaveTimer.start(autosave_interval)                 #set the interval and start the timer
 
 
     def closeEvent(self, event):
