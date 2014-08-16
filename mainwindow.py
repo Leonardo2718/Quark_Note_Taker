@@ -74,8 +74,10 @@ class MainWindow(QMainWindow):
         self.menu = {"File" : self.menuBar().addMenu("&File")}
         self.menu["View"] = self.menuBar().addMenu("&View")
 
-        self.action = {"New": self.menu["File"].addAction("&New")}
-        self.action["New"].setShortcut( QKeySequence.New )
+        self.action = {"New Note": self.menu["File"].addAction("&New Note")}
+        self.action["New Note"].setShortcut( QKeySequence.New )
+        self.action["New Notebook"] = self.menu["File"].addAction("New Note&book")
+        self.action["New Notebook"].setShortcut( QKeySequence("Ctrl+Shift+N") )
         self.action["Open"] = self.menu["File"].addAction("&Open")
         self.action["Open"].setShortcut( QKeySequence.Open )
         self.action["Save"] = self.menu["File"].addAction("&Save")
@@ -149,7 +151,7 @@ class MainWindow(QMainWindow):
         self.action["Save"].triggered.connect(self.saveFileAction)
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
-        self.action["New"].triggered.connect(self.newNoteAction)
+        self.action["New Note"].triggered.connect(self.newNoteAction)
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
@@ -260,7 +262,8 @@ class MainWindow(QMainWindow):
 
         self.saveFileAction()   #save the current note
 
-        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])            #get the search directory
+        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])     #get the search directory
+        searchPath = os.path.abspath(p)                                         #
         filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
         if filePath[0] != "":                                                   #if the user did not hit the 'cancel' button
             self.noteEditor.openFileRequest(filePath[0])                            #open the file in the editor
@@ -279,7 +282,8 @@ class MainWindow(QMainWindow):
     def saveAsFileAction(self):
         """Save text in editor to a new note and load it."""
 
-        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])            #get the search directory
+        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])     #get the search directory
+        searchPath = os.path.abspath(p)                                         #
         filePath = QFileDialog.getSaveFileName(self, "Save As File", searchPath)#prompt the use for the new file path
         if filePath[0] != "":                                                   #do not perform the save if the user pressed the 'cancel' button
             self.noteEditor.saveAsRequested(filePath[0])
@@ -290,7 +294,8 @@ class MainWindow(QMainWindow):
     def saveCopyAsAction(self):
         """Save text in editor to a new note but do not load it."""
 
-        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])
+        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+        searchPath = os.path.abspath(p)
         filePath = QFileDialog.getSaveFileName(self, "Save Copy As", searchPath)
         if filePath[0] != "":
             self.noteEditor.saveCopyAsRequested(filePath[0])
@@ -313,7 +318,8 @@ class MainWindow(QMainWindow):
 
         self.saveFileAction()   #save currently open note
 
-        searchPath = os.path.abspath(quarkExtra.config["notes_dir"])
+        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+        searchPath = os.path.abspath(p)
         filePath = QFileDialog.getSaveFileName(self, "New Note", searchPath)
 
         if filePath[0] != "":
