@@ -273,8 +273,9 @@ class MainWindow(QMainWindow):
     def saveFileAction(self):
         """Save text in editor to note."""
 
-        if self.noteEditor.noteFilePath == "":  #if the file has not been saved yet, do a 'save as' instead
-            self.saveAsFileAction()
+        if self.noteEditor.noteFilePath == "":  #if the file has not been saved yet and there is text to be saved, do a 'save as' instead
+            if len( self.noteEditor.toPlainText() ) > 0:
+                self.saveAsFileAction()
         else:                                   #else, just save the file
             self.noteEditor.saveFileRequest()
             self.scrollPreview()                    #scroll preview to edited line
