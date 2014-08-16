@@ -70,39 +70,40 @@ class MainWindow(QMainWindow):
         #setup the main window menu
         self.mainToolBar = self.addToolBar("Main Toolbar")
         self.mainToolBar.setMovable(False)
-        self.menu = {"File" : self.menuBar().addMenu("File")}
-        self.menu["View"] = self.menuBar().addMenu("View")
 
-        self.action = {"New": self.menu["File"].addAction("New")}
+        self.menu = {"File" : self.menuBar().addMenu("&File")}
+        self.menu["View"] = self.menuBar().addMenu("&View")
+
+        self.action = {"New": self.menu["File"].addAction("&New")}
         self.action["New"].setShortcut( QKeySequence.New )
-        self.action["Open"] = self.menu["File"].addAction("Open")
+        self.action["Open"] = self.menu["File"].addAction("&Open")
         self.action["Open"].setShortcut( QKeySequence.Open )
-        self.action["Save"] = self.menu["File"].addAction("Save")
+        self.action["Save"] = self.menu["File"].addAction("&Save")
         self.action["Save"].setShortcut( QKeySequence.Save )
-        self.action["Save As"] = self.menu["File"].addAction("Save As")
+        self.action["Save As"] = self.menu["File"].addAction("Save &As")
         self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
-        self.action["Save Copy As"] = self.menu["File"].addAction("Save Copy As")
+        self.action["Save Copy As"] = self.menu["File"].addAction("Save &Copy As")
         self.menu["File"].addSeparator()
 
         self.actionGroup = {"display mode": QActionGroup(self) }
-        self.action["View Mode"] = self.actionGroup["display mode"].addAction("View Mode")
+        self.action["View Mode"] = self.actionGroup["display mode"].addAction("V&iew Mode")
         self.action["View Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["View Mode"] )
-        self.action["Edit Mode"] = self.actionGroup["display mode"].addAction("Edit Mode")
+        self.action["Edit Mode"] = self.actionGroup["display mode"].addAction("&Edit Mode")
         self.action["Edit Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["Edit Mode"] )
-        self.action["Edit/View Mode"] = self.actionGroup["display mode"].addAction("Edit/View Mode")
+        self.action["Edit/View Mode"] = self.actionGroup["display mode"].addAction("Edit/View &Mode")
         self.action["Edit/View Mode"].setCheckable(True)
         #self.action["Edit/View Mode"].setChecked(True)
         self.menu["View"].addAction( self.action["Edit/View Mode"] )
 
         self.menu["View"].addSeparator()
-        self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview Vertically")
+        self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
         self.action["View Editor/Preview Vertically"].setCheckable(True)
         #self.action["View Editor/Preview Vertically"].setChecked(False)
 
         self.menu["View"].addSeparator()
-        self.action["Note Manager"] = self.menu["View"].addAction("Note Manager")
+        self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
         self.action["Note Manager"].setCheckable(True)
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
         #self.action["Note Manager"].setChecked(False)
@@ -185,7 +186,9 @@ class MainWindow(QMainWindow):
         else:
             quarkExtra.config["noteDisplayDirection"] = "false"
 
-        quarkExtra.config["defaultViewMode"] = self.actionGroup["display mode"].checkedAction().text()
+        for key, value in self.action.items():
+            if value == self.actionGroup["display mode"].checkedAction():
+                quarkExtra.config["defaultViewMode"] = key
 
         #save current config
         quarkExtra.saveCurrentConfigSettings()
