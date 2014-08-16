@@ -57,14 +57,6 @@ import quarkExtra
 
 if __name__ == '__main__':
 
-    #create Quark application
-    app = QApplication(sys.argv)
-    win = MainWindow()
-
-    themeFile = open(quarkExtra.config["theme_file"], "r")
-    app.setStyleSheet(themeFile.read())
-    themeFile.close()
-
     #print copyright statement
     print("""
 Copyright (C) 2014 Leonardo Banderali
@@ -86,6 +78,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.""")
+
+    #create Quark application
+    app = QApplication(sys.argv)
+    win = MainWindow()
+
+    themeFile = open(quarkExtra.config["theme_file"], "r")
+    app.setStyleSheet(themeFile.read())
+    themeFile.close()
 
     #execute the app
     win.show()
