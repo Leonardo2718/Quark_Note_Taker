@@ -104,7 +104,32 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
             if os.path.exists(readmeFile):                                  #if it exists, copy it to the notes directory
                 shutil.copyfile(readmeFile, os.path.join(notesDir, "README.md") )
 
+        self.updateModel()  #load data from notes dir
+
         #load all the notes and notebooks from the notes directory
+        #if os.path.exists(notesDir):
+        #    for item in os.listdir(notesDir):                   #for every item in the notes directory
+
+        #        itemPath = os.path.join(notesDir, item)             #get absolute path to the item
+
+        #        if os.path.isfile(itemPath):                        #if the item is a file/note
+        #            self._noteList.append( QuarkNoteModel(itemPath) )           #append a new note to the notes list
+
+        #        elif os.path.isdir(itemPath):                       #if the item is directory/notebook
+        #            self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
+
+
+    def updateModel(self):
+        """Updates the model to match the filesystem."""
+
+        notesDir = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])  #get the Quark notes directory from the config file
+
+        self.beginResetModel()
+
+        self._noteList = []     #clear list of notes
+        self._notebookList = [] #clear list of notebooks
+
+         #load all the notes and notebooks from the notes directory
         if os.path.exists(notesDir):
             for item in os.listdir(notesDir):                   #for every item in the notes directory
 
@@ -115,6 +140,8 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
                 elif os.path.isdir(itemPath):                       #if the item is directory/notebook
                     self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
+
+        self.endResetModel()
 
 
     def index(self, row, column, itemParent = QModelIndex() ):
@@ -136,7 +163,7 @@ inside its parent."""
                     note = self._noteList[row]
                     returnIndex = self.createIndex(row, column, note)
                 elif row < len(self._noteList) + len(self._notebookList):   #check if item is a notebook
-                    notebook = self._notebookList[row - len(self._notebookList)]
+                    notebook = self._notebookList[row - len(self._noteList)]
                     returnIndex = self.createIndex(row, column, notebook)
 
         return returnIndex

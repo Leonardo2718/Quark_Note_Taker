@@ -267,7 +267,7 @@ class MainWindow(QMainWindow):
         searchPath = os.path.abspath(p)                                         #
         filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
         if filePath[0] != "":                                                   #if the user did not hit the 'cancel' button
-            self.noteEditor.openFileRequest(filePath[0])                            #open the file in the editor
+            self.noteEditor.openFileRequest(filePath[0])                        #open the file in the editor
 
 
     def saveFileAction(self):
@@ -290,6 +290,7 @@ class MainWindow(QMainWindow):
             self.noteEditor.saveAsRequested(filePath[0])
 
         self.scrollPreview()                                                    #scroll preview to edited line
+        self.noteManager.model().updateModel()                                          #update the note manager
 
 
     def saveCopyAsAction(self):
@@ -302,6 +303,7 @@ class MainWindow(QMainWindow):
             self.noteEditor.saveCopyAsRequested(filePath[0])
 
         self.scrollPreview()    #scroll preview to edited line
+        self.noteManager.model().updateModel()
 
 
     def changeTitle(self, noteFilePath):
@@ -330,6 +332,8 @@ class MainWindow(QMainWindow):
 
             self.noteEditor.openFileRequest(filePath[0])    #open newly created file
 
+        self.noteManager.model().updateModel()
+
 
     def newNotebookAction(self):
         """Create a new notebook."""
@@ -340,6 +344,8 @@ class MainWindow(QMainWindow):
             p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
             rootPath = os.path.abspath(p)
             os.makedirs( os.path.join(rootPath, notebookName[0]) )
+
+        self.noteManager.model().updateModel()
 
 
     def linkClickHandler(self, url):
