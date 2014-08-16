@@ -152,6 +152,7 @@ class MainWindow(QMainWindow):
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
         self.action["New Note"].triggered.connect(self.newNoteAction)
+        self.action["New Notebook"].triggered.connect(self.newNotebookAction)
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
@@ -328,6 +329,17 @@ class MainWindow(QMainWindow):
             noteFile.close()                    #
 
             self.noteEditor.openFileRequest(filePath[0])    #open newly created file
+
+
+    def newNotebookAction(self):
+        """Create a new notebook."""
+
+        notebookName = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook");
+
+        if notebookName[0] is not None and len(notebookName[0]) > 0:
+            p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+            rootPath = os.path.abspath(p)
+            os.makedirs( os.path.join(rootPath, notebookName[0]) )
 
 
     def linkClickHandler(self, url):
