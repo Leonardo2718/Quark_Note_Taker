@@ -1,6 +1,6 @@
 {
     "autosave_every": "300000",
-    "defaultViewMode": "Edit/View Mode",
+    "defaultViewMode": "View & Edit Mode",
     "displayNoteManager": "true",
     "end_html_template_file": "html-template/htmlDoc_end.html",
     "noteDisplayDirection": "false",

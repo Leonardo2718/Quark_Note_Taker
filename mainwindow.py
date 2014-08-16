@@ -92,10 +92,10 @@ class MainWindow(QMainWindow):
         self.action["Edit Mode"] = self.actionGroup["display mode"].addAction("&Edit Mode")
         self.action["Edit Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["Edit Mode"] )
-        self.action["Edit/View Mode"] = self.actionGroup["display mode"].addAction("Edit/View &Mode")
-        self.action["Edit/View Mode"].setCheckable(True)
-        #self.action["Edit/View Mode"].setChecked(True)
-        self.menu["View"].addAction( self.action["Edit/View Mode"] )
+        self.action["View & Edit Mode"] = self.actionGroup["display mode"].addAction("View && Edit &Mode")
+        self.action["View & Edit Mode"].setCheckable(True)
+        #self.action["View & Edit Mode"].setChecked(True)
+        self.menu["View"].addAction( self.action["View & Edit Mode"] )
 
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
             self.noteEditor.setVisible(True)
             self.notePreview.setVisible(False)
 
-        elif action == self.action["Edit/View Mode"] :  #if the user choses to display both the note editor and note preview
+        elif action == self.action["View & Edit Mode"] :  #if the user choses to display both the note editor and note preview
             self.noteEditor.setVisible(True)
             self.notePreview.setVisible(True)
 
