@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 14, 2014
+Last Modified: August 15, 2014
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -40,6 +40,7 @@ License:
 #python modules
 import sys
 import os
+import shutil
 
 #Qt objects
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
@@ -92,16 +93,28 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
         notesDir = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])  #get the Quark notes directory from the config file
 
+        if not os.path.exists(notesDir):                            #if the the notes directory does note exits, open/create one
+            promptDialog = quarkExtra.GetNotesDirDialog(notesDir, parent)   #prompt the user for for a directory path
+            promptDialog.exec()                                             #
+            notesDir = promptDialog.getNotesPath()                          #
+            quarkExtra.config["notes_dir"] = notesDir                       #save the directory path
+            if not os.path.exists(notesDir):                                #if the directory does not exits yet, create it
+                os.makedirs(notesDir)
+            readmeFile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "README.md") #get path to Quark's main 'README.md' file
+            if os.path.exists(readmeFile):                                  #if it exists, copy it to the notes directory
+                shutil.copyfile(readmeFile, os.path.join(notesDir, "README.md") )
+
         #load all the notes and notebooks from the notes directory
-        for item in os.listdir(notesDir):                   #for every item in the notes directory
+        if os.path.exists(notesDir):
+            for item in os.listdir(notesDir):                   #for every item in the notes directory
 
-            itemPath = os.path.join(notesDir, item)             #get absolute path to the item
+                itemPath = os.path.join(notesDir, item)             #get absolute path to the item
 
-            if os.path.isfile(itemPath):                        #if the item is a file/note
-                self._noteList.append( QuarkNoteModel(itemPath) )           #append a new note to the notes list
+                if os.path.isfile(itemPath):                        #if the item is a file/note
+                    self._noteList.append( QuarkNoteModel(itemPath) )           #append a new note to the notes list
 
-            elif os.path.isdir(itemPath):                       #if the item is directory/notebook
-                self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
+                elif os.path.isdir(itemPath):                       #if the item is directory/notebook
+                    self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
 
 
     def index(self, row, column, itemParent = QModelIndex() ):
