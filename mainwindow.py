@@ -72,79 +72,92 @@ class MainWindow(QMainWindow):
         self.mainToolBar = self.addToolBar("Main Toolbar")
         self.mainToolBar.setMovable(False)
 
+        #create menues
         self.menu = {"File" : self.menuBar().addMenu("&File")}
         self.menu["View"] = self.menuBar().addMenu("&View")
         self.menu["Help"] = self.menuBar().addMenu("&Help")
 
+        #create actions for 'File' menu
         self.action = {"New Note": self.menu["File"].addAction("&New Note")}
-        self.action["New Note"].setShortcut( QKeySequence.New )
         self.action["New Notebook"] = self.menu["File"].addAction("New Note&book")
-        self.action["New Notebook"].setShortcut( QKeySequence("Ctrl+Shift+N") )
         self.action["Open"] = self.menu["File"].addAction("&Open")
-        self.action["Open"].setShortcut( QKeySequence.Open )
         self.menu["File"].addSeparator()
         self.action["Save"] = self.menu["File"].addAction("&Save")
-        self.action["Save"].setShortcut( QKeySequence.Save )
         self.action["Save As"] = self.menu["File"].addAction("Save &As")
-        self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
         self.action["Save Copy As"] = self.menu["File"].addAction("Save &Copy As")
         self.menu["File"].addSeparator()
         self.action["Rename This Note"] = self.menu["File"].addAction("&Rename This Note")
 
+        #create shorcuts for actions in 'File' menu
+        self.action["New Note"].setShortcut( QKeySequence.New )
+        self.action["New Notebook"].setShortcut( QKeySequence("Ctrl+Shift+N") )
+        self.action["Open"].setShortcut( QKeySequence.Open )
+        self.action["Save"].setShortcut( QKeySequence.Save )
+        self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
+
+        #create actions for 'View' menu
         self.actionGroup = {"display mode": QActionGroup(self) }
         self.action["View Mode"] = self.actionGroup["display mode"].addAction("V&iew Mode")
-        self.action["View Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["View Mode"] )
         self.action["Edit Mode"] = self.actionGroup["display mode"].addAction("&Edit Mode")
-        self.action["Edit Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["Edit Mode"] )
         self.action["View & Edit Mode"] = self.actionGroup["display mode"].addAction("View && Edit &Mode")
-        self.action["View & Edit Mode"].setCheckable(True)
         self.menu["View"].addAction( self.action["View & Edit Mode"] )
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
-        self.action["View Editor/Preview Vertically"].setCheckable(True)
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
-        self.action["Note Manager"].setCheckable(True)
+
+        #create shorcuts for actions in 'File' menu
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
 
+        #set check state for actions in 'File' menu
+        self.action["View Mode"].setCheckable(True)
+        self.action["Edit Mode"].setCheckable(True)
+        self.action["View & Edit Mode"].setCheckable(True)
+        self.action["View Editor/Preview Vertically"].setCheckable(True)
+        self.action["Note Manager"].setCheckable(True)
+
+        #create actions for 'Help' menu
         self.action["About Quark Note Taker"] = self.menu["Help"].addAction("&About Quark Note Taker")
         self.action["View GitHub Page"] = self.menu["Help"].addAction("View &GitHub Page")
         self.menu["Help"].addSeparator()
         self.action["About Qt"] = self.menu["Help"].addAction("About &Qt")
 
-        #setup layout
+        #setup main window layout
         self.centralWidget = QSplitter(self)                #widget container to hold all others
         self.centralWidget.setOrientation(Qt.Horizontal)
         self.centralWidget.setChildrenCollapsible(False)
         self.setCentralWidget(self.centralWidget)
 
-        self.noteManager = QTreeView(self.centralWidget)    #widget to manage notes in a tree style display
+        #setup note manager
+        self.noteManager = QTreeView(self.centralWidget)    #manage notes in a tree display
         self.noteManager.setModel(QuarkNoteManagerModel(self))
         self.centralWidget.addWidget(self.noteManager)
 
-        self.noteArea = QSplitter(self.centralWidget)       #area in which note editor and previewer are
+        #setup an area to hold the note editor and previewer
+        self.noteArea = QSplitter(self.centralWidget)
         self.noteArea.setChildrenCollapsible(False)
         self.centralWidget.addWidget(self.noteArea)
 
-        self.noteEditor = NoteEditor(self.noteArea)         #note editing widget
+        #create and set the note editor
+        self.noteEditor = NoteEditor(self.noteArea)
         editorSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         editorSizePolicy.setHorizontalStretch(3)
         editorSizePolicy.setVerticalStretch(3)
         self.noteEditor.setSizePolicy(editorSizePolicy)
+        self.noteArea.addWidget(self.noteEditor)
 
+        #create and set the note previewer
         self.notePreview = QWebView(self.noteArea)          #note preview widget
         self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
         previewSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         previewSizePolicy.setHorizontalStretch(1)
         previewSizePolicy.setVerticalStretch(1)
         self.notePreview.setSizePolicy(previewSizePolicy)
-
-        self.noteArea.addWidget(self.noteEditor)
         self.noteArea.addWidget(self.notePreview)
 
-        #connect signals to slots
+        #connect signals in 'File' menu to slots
         self.action["New Note"].triggered.connect(self.newNoteAction)
         self.action["New Notebook"].triggered.connect(self.newNotebookAction)
         self.action["Open"].triggered.connect(self.openFileAction)
@@ -153,20 +166,25 @@ class MainWindow(QMainWindow):
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
         self.action["Rename This Note"].triggered.connect(self.renameNoteAction)
 
+        #connect signals in 'View' menu to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
         self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
 
+        #connect signals in 'Help' menu to slots
         self.action["About Quark Note Taker"].triggered.connect(self.displayAboutQuark)
         self.action["View GitHub Page"].triggered.connect(self.openGithubPage)
         self.action["About Qt"].triggered.connect(self.displayAboutQt)
 
+        #connect signals from the note editor to slots
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
         self.noteEditor.verticalScrollBar().valueChanged.connect(self.changePreviewScrollOnEditorScroll)
 
+        #connect signals from the note previewer to slots
         self.notePreview.page().linkClicked.connect(self.linkClickHandler)
 
+        #connect signals from the note manager to slots
         self.noteManager.doubleClicked.connect(self.openNoteFromManager)
 
         #last minute configs
@@ -225,6 +243,7 @@ class MainWindow(QMainWindow):
 
     def changeNoteDirectionOnAction(self, isVertical):
         """Changes direction (horizontal/vertical) of the note editor and previewer."""
+
         if not isVertical:
             self.noteArea.setOrientation(Qt.Horizontal)
         elif isVertical:
@@ -254,6 +273,8 @@ class MainWindow(QMainWindow):
 
 
     def updatePreview(self):
+        """Converts the Markdown note to HTML and loads it into the previewer."""
+
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         #%% Some debug code that outputs the HTML to a file %%
