@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 12, 2014
+Last Modified: August 17, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -33,6 +33,7 @@ License:
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 """
+
 
 
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,17 +100,14 @@ class MainWindow(QMainWindow):
         self.menu["View"].addAction( self.action["Edit Mode"] )
         self.action["View & Edit Mode"] = self.actionGroup["display mode"].addAction("View && Edit &Mode")
         self.action["View & Edit Mode"].setCheckable(True)
-        #self.action["View & Edit Mode"].setChecked(True)
         self.menu["View"].addAction( self.action["View & Edit Mode"] )
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
         self.action["View Editor/Preview Vertically"].setCheckable(True)
-        #self.action["View Editor/Preview Vertically"].setChecked(False)
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
         self.action["Note Manager"].setCheckable(True)
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
-        #self.action["Note Manager"].setChecked(False)
 
         self.action["About Quark Note Taker"] = self.menu["Help"].addAction("&About Quark Note Taker")
         self.action["View GitHub Page"] = self.menu["Help"].addAction("View &GitHub Page")
@@ -123,13 +121,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         self.noteManager = QTreeView(self.centralWidget)    #widget to manage notes in a tree style display
-        #self.noteManager.setVisible(False)
         self.noteManager.setModel(QuarkNoteManagerModel(self))
         self.centralWidget.addWidget(self.noteManager)
 
         self.noteArea = QSplitter(self.centralWidget)       #area in which note editor and previewer are
-        #self.noteArea.setOrientation(Qt.Vertical)
-        #self.noteArea.setOrientation(Qt.Horizontal)
         self.noteArea.setChildrenCollapsible(False)
         self.centralWidget.addWidget(self.noteArea)
 
@@ -262,9 +257,9 @@ class MainWindow(QMainWindow):
         htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         #%% Some debug code that outputs the HTML to a file %%
-        htmlFile = open("_output.html", "w+")
-        htmlFile.write(htmlDocument)
-        htmlFile.close()
+        #htmlFile = open("_output.html", "w+")
+        #htmlFile.write(htmlDocument)
+        #htmlFile.close()
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )

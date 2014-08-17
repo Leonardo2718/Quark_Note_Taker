@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mdhighlighter.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 7, 2014
+Last Modified: August 17, 2014
 
 Description:
     This file contains the class used to perform syntax highlighting on the markdown note editor.
@@ -35,6 +35,7 @@ License:
 """
 
 
+
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #python modules
@@ -46,6 +47,7 @@ import copy
 from PyQt5.QtCore import Qt, QRegularExpression, QRegularExpressionMatch
 from PyQt5.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont
 #from PyQt5.QtWidgets import *
+
 
 
 #~note editor~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,7 +91,6 @@ is highlighted using the 'setFormat(start, count, format)' method."""
         self.spanRules = {
             "link": QRegularExpression("!?\\[[^\\n]*\\](\\([^\\n]*\\)|\\[[^\\n]*\\])"),
             "link_id": QRegularExpression("^( {0,3})\\[[^\\s]*\\]:\\s*[^\\s]+(\\s+(\"[^\"\\n]*\"|\'[^\"\\n]*\'|\([^\"\\n]*\)))?"),
-            #"emphasis": QRegularExpression("\\s((\\*)[^\\n\\*]+(\\*)|(\\*)(\\*)[^\\n*]*(\\*)(\\*)|_[^\\n_]*_|__[^\\n_]*__)\\s"),
             "emphasis": QRegularExpression("(\\s?\\*[^\\s])([^*]*)([^\\s]\\*\\s?)|(\\s?\\*{2}[^\\s])([^*]*)([^\\s]\\*{2}\\s?)|(\\s_[^\\s])([^_]*)([^\\s]_\\s?)|(\\s?_{2}[^\\s])([^_]*)([^\\s]\\_{2}\\s)"),
             "code": QRegularExpression("`[^\\n`]+`|``[^\\n]*``"),
             "math": QRegularExpression("\\$[^\\n\\$]+\\$")

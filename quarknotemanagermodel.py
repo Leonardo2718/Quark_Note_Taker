@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 15, 2014
+Last Modified: August 17, 2014
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -35,6 +35,7 @@ License:
 """
 
 
+
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #python modules
@@ -51,6 +52,7 @@ from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
 import quarkExtra
 from quarknotebookmodel import QuarkNotebookModel
 from quarknotemodel import QuarkNoteModel
+
 
 
 #~notebook model class~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,18 +108,6 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
         self.updateModel()  #load data from notes dir
 
-        #load all the notes and notebooks from the notes directory
-        #if os.path.exists(notesDir):
-        #    for item in os.listdir(notesDir):                   #for every item in the notes directory
-
-        #        itemPath = os.path.join(notesDir, item)             #get absolute path to the item
-
-        #        if os.path.isfile(itemPath):                        #if the item is a file/note
-        #            self._noteList.append( QuarkNoteModel(itemPath) )           #append a new note to the notes list
-
-        #        elif os.path.isdir(itemPath):                       #if the item is directory/notebook
-        #            self._notebookList.append( QuarkNotebookModel(itemPath) )   #append a new note to the notebooks list
-
 
     def updateModel(self):
         """Updates the model to match the filesystem."""
@@ -145,8 +135,7 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
 
     def index(self, row, column, itemParent = QModelIndex() ):
-        """Returns the 'QModelIndex' of an item based on its (row,column) position
-inside its parent."""
+        """Returns the 'QModelIndex' of an item based on its (row,column) position inside its parent."""
 
         returnIndex = QModelIndex()         #index to be returned
 

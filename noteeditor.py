@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: noteeditor.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 7, 2014
+Last Modified: August 17, 2014
 
 Description:
     This file contains the class wich defines the markdown note editor.
@@ -35,6 +35,7 @@ License:
 """
 
 
+
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #python modules
@@ -48,6 +49,7 @@ from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
 from mdhighlighter import MDHighlighter
+
 
 
 #~note editor~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,6 +125,7 @@ class NoteEditor(QPlainTextEdit):
             self.noteFileChanged.emit( os.path.abspath(self.noteFilePath) ) #emit signal to notify other objects of file change
 
         return noErrors
+
 
     def saveCopyAsRequested(self, filePath):
         """Save note to a new file without loading it.  Return 'True' if successful, 'False' otherwise."""

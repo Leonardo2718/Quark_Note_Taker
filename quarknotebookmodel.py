@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotebookmodel.py
 Author: Leonardo Banderali
 Created: August 12, 2014
-Last Modified: August 13, 2014
+Last Modified: August 17, 2014
 
 Description:
     This file contains the class used to represent a quark notebook in the note manager.
@@ -35,6 +35,7 @@ License:
 """
 
 
+
 #~import modules~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #python modules
@@ -49,6 +50,7 @@ from PyQt5.QtWidgets import QFileIconProvider
 #Quark specific
 import quarkExtra
 from quarknotemodel import QuarkNoteModel
+
 
 
 #~notebook model class~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
