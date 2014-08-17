@@ -81,12 +81,14 @@ class MainWindow(QMainWindow):
         self.action["New Notebook"].setShortcut( QKeySequence("Ctrl+Shift+N") )
         self.action["Open"] = self.menu["File"].addAction("&Open")
         self.action["Open"].setShortcut( QKeySequence.Open )
+        self.menu["File"].addSeparator()
         self.action["Save"] = self.menu["File"].addAction("&Save")
         self.action["Save"].setShortcut( QKeySequence.Save )
         self.action["Save As"] = self.menu["File"].addAction("Save &As")
         self.action["Save As"].setShortcut( QKeySequence("Ctrl+Shift+S") )
         self.action["Save Copy As"] = self.menu["File"].addAction("Save &Copy As")
         self.menu["File"].addSeparator()
+        self.action["Rename This Note"] = self.menu["File"].addAction("&Rename This Note")
 
         self.actionGroup = {"display mode": QActionGroup(self) }
         self.action["View Mode"] = self.actionGroup["display mode"].addAction("V&iew Mode")
@@ -99,12 +101,10 @@ class MainWindow(QMainWindow):
         self.action["View & Edit Mode"].setCheckable(True)
         #self.action["View & Edit Mode"].setChecked(True)
         self.menu["View"].addAction( self.action["View & Edit Mode"] )
-
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
         self.action["View Editor/Preview Vertically"].setCheckable(True)
         #self.action["View Editor/Preview Vertically"].setChecked(False)
-
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
         self.action["Note Manager"].setCheckable(True)
@@ -150,12 +150,13 @@ class MainWindow(QMainWindow):
         self.noteArea.addWidget(self.notePreview)
 
         #connect signals to slots
+        self.action["New Note"].triggered.connect(self.newNoteAction)
+        self.action["New Notebook"].triggered.connect(self.newNotebookAction)
         self.action["Open"].triggered.connect(self.openFileAction)
         self.action["Save"].triggered.connect(self.saveFileAction)
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
-        self.action["New Note"].triggered.connect(self.newNoteAction)
-        self.action["New Notebook"].triggered.connect(self.newNotebookAction)
+        self.action["Rename This Note"].triggered.connect(self.renameNoteAction)
 
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
@@ -471,3 +472,18 @@ THE SOFTWARE.</p>""")
         """Display 'About Qt - Quark Note Taker' message box."""
 
         QMessageBox.aboutQt(self, "About Qt - Quark Note Taker")
+
+
+    def renameNoteAction(self):
+        """Open input dialog to rename the current note."""
+
+        currentName = self.noteEditor.getNoteFileName()
+        newName, ok = QInputDialog.getText(self, "Rename This Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName);
+
+        if ok and newName is not None and len(newName) > 0:
+            currentNotePath = self.noteEditor.getNotePath()
+            noteDirPath = os.path.dirname(currentNotePath)
+            newNotePath = os.path.join(noteDirPath, newName)
+            os.rename(currentNotePath, newNotePath)
+
+        self.noteManager.model().updateModel()

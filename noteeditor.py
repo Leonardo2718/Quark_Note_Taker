@@ -141,6 +141,18 @@ class NoteEditor(QPlainTextEdit):
         return noErrors
 
 
+    def getNoteFileName(self):
+        """Returns the file name of the note being edited."""
+
+        return os.path.basename(self.noteFilePath)
+
+
+    def getNotePath(self):
+        """Returns the path to the note being edited."""
+
+        return self.noteFilePath
+
+
     #~signals~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     noteFileChanged = pyqtSignal([str]) #a signal to be emitted when 'self.noteFilePath' (path to the note file being edited) is changed
