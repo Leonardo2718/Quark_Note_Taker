@@ -73,6 +73,7 @@ class MainWindow(QMainWindow):
 
         self.menu = {"File" : self.menuBar().addMenu("&File")}
         self.menu["View"] = self.menuBar().addMenu("&View")
+        self.menu["Help"] = self.menuBar().addMenu("&Help")
 
         self.action = {"New Note": self.menu["File"].addAction("&New Note")}
         self.action["New Note"].setShortcut( QKeySequence.New )
@@ -110,6 +111,11 @@ class MainWindow(QMainWindow):
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
         #self.action["Note Manager"].setChecked(False)
 
+        self.action["About Quark Note Taker"] = self.menu["Help"].addAction("&About Quark Note Taker")
+        self.action["View GitHub Page"] = self.menu["Help"].addAction("View &GitHub Page")
+        self.menu["Help"].addSeparator()
+        self.action["About Qt"] = self.menu["Help"].addAction("About &Qt")
+
         #setup layout
         self.centralWidget = QSplitter(self)                #widget container to hold all others
         self.centralWidget.setOrientation(Qt.Horizontal)
@@ -144,15 +150,20 @@ class MainWindow(QMainWindow):
         self.noteArea.addWidget(self.notePreview)
 
         #connect signals to slots
-        self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
-        self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
-        self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
         self.action["Open"].triggered.connect(self.openFileAction)
         self.action["Save"].triggered.connect(self.saveFileAction)
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
         self.action["New Note"].triggered.connect(self.newNoteAction)
         self.action["New Notebook"].triggered.connect(self.newNotebookAction)
+
+        self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
+        self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
+        self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
+
+        self.action["About Quark Note Taker"].triggered.connect(self.displayAboutQuark)
+        self.action["View GitHub Page"].triggered.connect(self.openGithubPage)
+        self.action["About Qt"].triggered.connect(self.displayAboutQt)
 
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
@@ -414,3 +425,49 @@ class MainWindow(QMainWindow):
             note = itemIndex.internalPointer()                                              #get the note
             notePath = note.getFilePath()                                                   #get path to the note file
             self.noteEditor.openFileRequest(notePath)                                       #open the note file
+
+
+    def displayAboutQuark(self):
+        """Display 'About - Quark Note Taker' message box."""
+
+        QMessageBox.about(self, "About - Quark Note Taker",
+        """<p>Quark Note Taker is an opensource, cross platform note taking application, written in python.
+Notes are stored as plain-text/markdown files. Quark is highly customizable
+as all files (including config files) are editable by the user.  It uses the
+<a href="http://www.riverbankcomputing.com/software/pyqt/intro">PyQt</a> framework to display
+the user interface.  It also uses <a href="https://github.com/waylan/Python-Markdown">Python Markdown</a>
+to create a live preview of the note with support for <a href="http://www.mathjax.org/">MathJax</a> syntax.</p>
+
+<p><a href="https://github.com/Leonardo2718/Quark_Note_Taker">View GitHub page &rarr;</a></p>
+
+<p>Copyright &copy; 2014 Leonardo Banderali</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>""")
+
+
+    def openGithubPage(self):
+        """Open Quark GitHub page in the users default browser."""
+
+        QDesktopServices.openUrl( QUrl("https://github.com/Leonardo2718/Quark_Note_Taker") );
+
+
+    def displayAboutQt(self):
+        """Display 'About Qt - Quark Note Taker' message box."""
+
+        QMessageBox.aboutQt(self, "About Qt - Quark Note Taker")
