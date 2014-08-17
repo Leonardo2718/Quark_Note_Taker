@@ -8,18 +8,20 @@ to create a live preview of the note with support for [MathJax](http://www.mathj
 
 ##Current features
 * basic markdown syntax highlighting
+* basic note management
+* auto-saveing
 * markdown live preview
 * [MathJax](http://www.mathjax.org/) syntax support
 * synchronized scrolling (sort of; see 'Known issues' section)
 
 ##Planed features
 * auto-indenting
-* note management
-* auto-save
 * session saving and loading
 * more customization capabilities
 * template support
 * macro support
+* automated version control for notes (?)
+* spell/grammer check
 
 ##Dependencies
 Make sure you have these installed as **Quark needs them** in order to work:
