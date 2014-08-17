@@ -346,12 +346,12 @@ class MainWindow(QMainWindow):
     def newNotebookAction(self):
         """Create a new notebook."""
 
-        notebookName = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook");
+        notebookName, ok = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook");
 
-        if notebookName[0] is not None and len(notebookName[0]) > 0:
+        if ok and notebookName is not None and len(notebookName) > 0:
             p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
             rootPath = os.path.abspath(p)
-            os.makedirs( os.path.join(rootPath, notebookName[0]) )
+            os.makedirs( os.path.join(rootPath, notebookName) )
 
         self.noteManager.model().updateModel()
 
