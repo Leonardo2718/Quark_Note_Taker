@@ -564,9 +564,9 @@ defines the position of the item."""
             for label, a in actionSet.items():
                 tempMenu.addAction(a)
 
-            p = self.noteManager.mapToGlobal(position)  #get the position of the menu
-            tempMenu.move(p)                            #set the menu to its position
-            tempMenu.show()                             #show the menu
+            p = self.noteManager.viewport().mapToGlobal(position)   #get the position of the menu
+            tempMenu.move(p)                                        #set the menu to its position
+            tempMenu.show()                                         #show the menu
 
 
     def openSelectedNote(self):
