@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotebookmodel.py
 Author: Leonardo Banderali
 Created: August 12, 2014
-Last Modified: August 17, 2014
+Last Modified: August 18, 2014
 
 Description:
     This file contains the class used to represent a quark notebook in the note manager.
@@ -98,6 +98,12 @@ note manager."""
         """Returns the name of this notebook/directory."""
 
         return self._notebookDir.fileName()
+
+
+    def getFilePath(self):
+        """Returns path to the note."""
+
+        return self._notebookDir.absoluteFilePath()
 
 
     def getIcon(self):

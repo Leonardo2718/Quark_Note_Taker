@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 17, 2014
+Last Modified: August 18, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -41,6 +41,7 @@ License:
 #python modules
 import sys
 import os
+import shutil
 
 #extra modules
 import markdown
@@ -57,6 +58,7 @@ import quarkExtra
 from noteeditor import NoteEditor
 from quarknotemanagermodel import QuarkNoteManagerModel
 from quarknotemodel import QuarkNoteModel
+from quarknotebookmodel import QuarkNotebookModel
 
 
 
@@ -131,9 +133,18 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         #setup note manager
-        self.noteManager = QTreeView(self.centralWidget)    #manage notes in a tree display
+        self.noteManager = QTreeView(self.centralWidget)                        #manage notes in a tree display
         self.noteManager.setModel(QuarkNoteManagerModel(self))
+        self.noteManager.setContextMenuPolicy(Qt.CustomContextMenu)             #set manager to display a custum menu when an item is right clicked
+        self.noteManager.setSelectionMode(QAbstractItemView.SingleSelection)    #only allow for one single item to be selected at a time
         self.centralWidget.addWidget(self.noteManager)
+
+        #create actions for the note manager
+        self.managerNoteAction = {"Open Note" : QAction("Open Note", self.noteManager)}
+        self.managerNoteAction["Rename Note"] = QAction("Rename Note", self.noteManager)
+        self.managerNoteAction["Remove Note"] = QAction("Remove Note", self.noteManager)
+        self.managerNotebookAction = {"Rename Notebook" : QAction("Rename Notebook", self.noteManager)}
+        self.managerNotebookAction["Remove Notebook"] = QAction("Remove Notebook", self.noteManager)
 
         #setup an area to hold the note editor and previewer
         self.noteArea = QSplitter(self.centralWidget)
@@ -186,6 +197,12 @@ class MainWindow(QMainWindow):
 
         #connect signals from the note manager to slots
         self.noteManager.doubleClicked.connect(self.openNoteFromManager)
+        self.noteManager.customContextMenuRequested.connect(self.showManagerItemMenu)
+        self.managerNoteAction["Open Note"].triggered.connect(self.openSelectedNote)
+        self.managerNoteAction["Rename Note"].triggered.connect(self.renameItemInManager)
+        self.managerNoteAction["Remove Note"].triggered.connect(self.removeItemInManager)
+        self.managerNotebookAction["Rename Notebook"].triggered.connect(self.renameItemInManager)
+        self.managerNotebookAction["Remove Notebook"].triggered.connect(self.removeItemInManager)
 
         #last minute configs
         self.changeTitle("")        #set default window title
@@ -501,5 +518,74 @@ THE SOFTWARE.</p>""")
             noteDirPath = os.path.dirname(currentNotePath)
             newNotePath = os.path.join(noteDirPath, newName)
             os.rename(currentNotePath, newNotePath)
+
+        self.noteManager.model().updateModel()
+
+
+    def renameItemInManager(self):
+        """Open input dialog to rename a note selected from the note manager."""
+
+        modelIndex = self.noteManager.selectedIndexes()[0]  #get the model index of the selected item
+        item = modelIndex.internalPointer()                 #get the item
+        currentName = item.getName()
+        newName = ""
+        ok = False
+        if type(item) is QuarkNoteModel:
+            newName, ok = QInputDialog.getText(self, "Rename Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName);
+        elif type(item) is QuarkNotebookModel:
+            newName, ok = QInputDialog.getText(self, "Rename Notebook - Quark Note Taker", "New notebook name: ", QLineEdit.Normal, currentName);
+
+
+        if ok and newName is not None and len(newName) > 0:
+            currentNotePath = item.getFilePath()
+            noteDirPath = os.path.dirname(currentNotePath)
+            newNotePath = os.path.join(noteDirPath, newName)
+            os.rename(currentNotePath, newNotePath)
+
+        self.noteManager.model().updateModel()
+
+
+    def showManagerItemMenu(self, position):
+        """Show the right-click menu for an item in the note manager.  'position' is a QPoint which
+defines the position of the item."""
+
+        itemModelIndex = self.noteManager.indexAt(position)         #get the model index of the selected item
+        if itemModelIndex == self.noteManager.selectedIndexes()[0]: #only process the request if the item was right-clicked (i.e. it is selected)
+                                                                    #   note that only a single item may be selected at a time
+            item = itemModelIndex.internalPointer()
+            tempMenu = QMenu(self.noteManager)
+            actionSet = []
+
+            if type(item) is QuarkNoteModel:
+                actionSet = self.managerNoteAction
+            elif type(item) is QuarkNotebookModel:
+                actionSet = self.managerNotebookAction
+
+            for label, a in actionSet.items():
+                tempMenu.addAction(a)
+
+            tempMenu.show()
+
+
+    def openSelectedNote(self):
+        """Open the note which is selected in the note manager."""
+
+        indexes = self.noteManager.selectedIndexes()#get the indexes of all the selected notes (note that only one can actually be selected)
+        self.openNoteFromManager(indexes[0])        #open the only note that is actually selected
+
+
+    def removeItemInManager(self):
+        """Remove an item (note or notebook) in the note manager."""
+
+        modelIndex = self.noteManager.selectedIndexes()[0]  #get the model index of the selected item
+        item = modelIndex.internalPointer()                 #get the item
+        itemFilePath = item.getFilePath()                   #get the path to the item
+        message = "You are about to remove:\n{0}\n\nAre you sure?".format(itemFilePath)
+        buttonSelected = QMessageBox.warning(self, "Removing an Item - Quark Note Taker", message, QMessageBox.Ok | QMessageBox.Cancel, QMessageBox.Cancel)
+        if buttonSelected == QMessageBox.Ok:
+            if type(item) is QuarkNoteModel:
+                os.remove(itemFilePath)
+            elif type(item) is QuarkNotebookModel:
+                shutil.rmtree(itemFilePath)
 
         self.noteManager.model().updateModel()
