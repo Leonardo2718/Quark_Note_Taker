@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 18, 2014
+Last Modified: August 19, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -564,7 +564,9 @@ defines the position of the item."""
             for label, a in actionSet.items():
                 tempMenu.addAction(a)
 
-            tempMenu.show()
+            p = self.noteManager.mapToGlobal(position)  #get the position of the menu
+            tempMenu.move(p)                            #set the menu to its position
+            tempMenu.show()                             #show the menu
 
 
     def openSelectedNote(self):
