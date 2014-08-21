@@ -520,6 +520,7 @@ THE SOFTWARE.</p>""")
             os.rename(currentNotePath, newNotePath)
 
         self.noteManager.model().updateModel()
+        self.noteEditor.openFileRequest(newNotePath)    #load the renamed file in the editor
 
 
     def renameItemInManager(self):
@@ -543,6 +544,7 @@ THE SOFTWARE.</p>""")
             os.rename(currentNotePath, newNotePath)
 
         self.noteManager.model().updateModel()
+        self.noteEditor.openFileRequest(newNotePath)    #load the renamed file in the editor
 
 
     def showManagerItemMenu(self, position):
