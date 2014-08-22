@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mdhighlighter.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 17, 2014
+Last Modified: August 21, 2014
 
 Description:
     This file contains the class used to perform syntax highlighting on the markdown note editor.
@@ -89,7 +89,7 @@ is highlighted using the 'setFormat(start, count, format)' method."""
 
         #rules that span on one line (in the format 'expression')
         self.spanRules = {
-            "link": QRegularExpression("!?\\[[^\\n]*\\](\\([^\\n]*\\)|\\[[^\\n]*\\])"),
+            "link": QRegularExpression("!?\\[[^\\n)]*\\](\\([^\\n)]*\\)|\\[[^\\n)]*\\])"),
             "link_id": QRegularExpression("^( {0,3})\\[[^\\s]*\\]:\\s*[^\\s]+(\\s+(\"[^\"\\n]*\"|\'[^\"\\n]*\'|\([^\"\\n]*\)))?"),
             "emphasis": QRegularExpression("(\\s?\\*[^\\s])([^*]*)([^\\s]\\*\\s?)|(\\s?\\*{2}[^\\s])([^*]*)([^\\s]\\*{2}\\s?)|(\\s_[^\\s])([^_]*)([^\\s]_\\s?)|(\\s?_{2}[^\\s])([^_]*)([^\\s]\\_{2}\\s)"),
             "code": QRegularExpression("`[^\\n`]+`|``[^\\n]*``"),
