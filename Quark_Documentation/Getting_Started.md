@@ -16,8 +16,13 @@
 Quark notes.  Files which are stored in this directory will be shown in the Quark notes
 manager.  I recommended you keep this directory **for Quark notes only**.  If you need
 to add files which are stored in a different directory, you should create a link to
-those files inside you notes directory.
-5. Once you've created your notes directory, you can start using Quark normally.
+those files inside you notes directory.  Once the directory has been created, Quark will
+copy this program's main `README.md` file to it.  
+*(Note: In the event that you do not specify a notes directory,*
+*Quark will default to use the source code's directory as your notes directory.)*
+5. Once you've created your notes directory, Quark will start and automatically open the
+`README.md` file. If this does not happen, you can manualy open any file you want by using
+`File->Open` of typing `Ctrl+O` on your keyboard.
 
 ##Using Quark
 When you open Quark for the first time, by default, you are presented with a window
@@ -51,6 +56,11 @@ on the notes manager.
 
 Using the `File` menu you can do things such as saving, opening, renaming, and creating
 new notes as well as notebooks.
+
+You can export your Markdown note to an HTML file by using `File->Export to HTML`.  When
+you click on this option, Quark will prompt you for the name and location of the file to
+which you want to export your note.  The exported HTML will be the same as the HTML used
+to display the note preview.
 
 ###The Notes Manager
 
@@ -111,4 +121,5 @@ contains some closing tags necessary for valid HTML.  You could edit this
 file to create a footer for your preview.  Keep in mind, however, that any changes to
 these files will only affect how the note is *previewed* and *not* the note itself.
 So if you add any special features (such as a footer) they will not be displayed if
-you choose to open your note in a different editor.
+you choose to open your note in a different editor (unless you export your note to an
+HTML file).

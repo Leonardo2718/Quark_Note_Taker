@@ -36,10 +36,10 @@ Make sure you have these installed as **Quark needs them** in order to work:
 3. Quark will prompt you to create a new notes directory.  By default, it will create
 it as `[HOME_DIRECTORY]/QuarkNotes/`.  Once the notes directory has been created, Quark
 will make a cope of this file to your new directory. 
-4. Navigate to `File->Open` or type `Ctrl+O` to show a dialog that you can use to open a file/note
-5. Open the file `README.md`
-6. If it opens and displays correctly, then Quark is working!
-7. Optional: customize quark to your liking by modifying any of the following files
+4. When Quark starts, if `README.md` is not opened by default, use `File->Open` (or
+type `Ctrl+O`) to open the file/note
+5. If the file opens and is displayed correctly, then Quark is working!
+6. Optional: customize quark to your liking by modifying any of the following files
     - `config.json`
     - `themes/default.css`
     - `html-template/htmlDoc_start.html`
