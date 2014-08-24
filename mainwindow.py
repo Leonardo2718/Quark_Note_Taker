@@ -89,6 +89,7 @@ class MainWindow(QMainWindow):
         self.action["Save Copy As"] = self.menu["File"].addAction("Save &Copy As")
         self.menu["File"].addSeparator()
         self.action["Rename This Note"] = self.menu["File"].addAction("&Rename This Note")
+        self.action["Export to HTML"] = self.menu["File"].addAction("&Export to HTML")
 
         #create shorcuts for actions in 'File' menu
         self.action["New Note"].setShortcut( QKeySequence.New )
@@ -176,6 +177,7 @@ class MainWindow(QMainWindow):
         self.action["Save As"].triggered.connect(self.saveAsFileAction)
         self.action["Save Copy As"].triggered.connect(self.saveCopyAsAction)
         self.action["Rename This Note"].triggered.connect(self.renameNoteAction)
+        self.action["Export to HTML"].triggered.connect(self.exportToHTMLAction)
 
         #connect signals in 'View' menu to slots
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
@@ -279,8 +281,8 @@ class MainWindow(QMainWindow):
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         #%% Some debug code that outputs the HTML to a file %%
         #htmlFile = open("_output.html", "w+")
-        #htmlFile.write(htmlDocument)
         #htmlFile.close()
+        #self.exportToHTMLFile("_output.html")
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
@@ -611,3 +613,26 @@ defines the position of the item."""
                 shutil.rmtree(itemFilePath)
 
         self.noteManager.model().updateModel()
+
+
+    def exportToHTMLFile(self, filePath):
+        """Exports the note to an HTML file.  The HTML will reflect what is displayed in the note preview."""
+
+        if os.path.exists(filePath) and os.path.isfile(filePath):           #if the file path provided exists
+            htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )   #convert the note to HTML
+            htmlFile = open(filePath, "w")                                      #open the provided file path
+            htmlFile.write(htmlDocument)                                        #write the HTML content to the file
+            htmlFile.close()                                                    #close the file after writing to it
+
+
+    def exportToHTMLAction(self):
+        """Action to export the note as an HTML file."""
+
+        searchPath = os.path.expanduser("~")    #offer to export in the user's home directory
+        filePath, fileType = QFileDialog.getSaveFileName(self, "Export to HTML", searchPath, "HTML (*.html *.htm)") #request the file name/path to export to
+
+        if not filePath == "":                  #if the file path returned by the user is valid
+            exportFile = open(filePath, "w+")       #create the file
+            exportFile.close()                      #
+            self.exportToHTMLFile(filePath)         #export HTML to the file
+            self.noteManager.model().updateModel()  #update the notes manager in case the exported file was saved in the user's notes directory
