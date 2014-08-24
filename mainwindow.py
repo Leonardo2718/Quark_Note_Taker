@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 23, 2014
+Last Modified: August 24, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -156,6 +156,7 @@ class MainWindow(QMainWindow):
         self.managerNoteAction["Remove Note"] = QAction("Remove Note", self.noteManager)
         self.managerNotebookAction = {"Rename Notebook" : QAction("Rename Notebook", self.noteManager)}
         self.managerNotebookAction["Remove Notebook"] = QAction("Remove Notebook", self.noteManager)
+        self.managerNotebookAction["Add a Note"] = QAction("Add a Note", self.noteManager)
 
         #setup an area to hold the note editor and previewer
         self.noteArea = QSplitter(self.centralWidget)
@@ -215,6 +216,7 @@ class MainWindow(QMainWindow):
         self.managerNoteAction["Remove Note"].triggered.connect(self.removeItemInManager)
         self.managerNotebookAction["Rename Notebook"].triggered.connect(self.renameItemInManager)
         self.managerNotebookAction["Remove Notebook"].triggered.connect(self.removeItemInManager)
+        self.managerNotebookAction["Add a Note"].triggered.connect(self.addNoteToNotebook)
 
         #last minute configs
         self.changeTitle("")        #set default window title
@@ -613,6 +615,22 @@ defines the position of the item."""
                 shutil.rmtree(itemFilePath)
 
         self.noteManager.model().updateModel()
+
+
+    def addNoteToNotebook(self):
+        """Add a note to the selected notebook."""
+
+        modelIndex = self.noteManager.selectedIndexes()[0]  #get the model index of the selected item
+        item = modelIndex.internalPointer()                 #get the item
+        if type(item) is QuarkNotebookModel:                #check that the selected item actually is a notebook
+            noteName, ok = QInputDialog.getText(self, "Add a Note - Quark Note Taker", "New note file name: ", QLineEdit.Normal) #get a file name for the new note
+            if ok and noteName != "":                       #if the user entered a file name it's valid
+                newNotePath = os.path.join(item.getFilePath(),noteName)     #get create a path for the note
+                if not os.path.exists(newNotePath):                         #only if the new note does not already exists
+                    newNote = open(newNotePath, "w+")                           #create the new note
+                    newNote.close()                                             #
+                    self.noteEditor.openFileRequest(newNotePath)                #open the newly created note
+                    self.noteManager.model().updateModel()                      #reload the notes manager
 
 
     def exportToHTMLFile(self, filePath):
