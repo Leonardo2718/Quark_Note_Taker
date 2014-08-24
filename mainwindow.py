@@ -371,7 +371,7 @@ class MainWindow(QMainWindow):
     def newNotebookAction(self):
         """Create a new notebook."""
 
-        notebookName, ok = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook");
+        notebookName, ok = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook")
 
         if ok and notebookName is not None and len(notebookName) > 0:
             p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
@@ -384,7 +384,7 @@ class MainWindow(QMainWindow):
     def linkClickHandler(self, url):
         """Handles links clicked (in note preview) which do not point to local files."""
 
-        QDesktopServices.openUrl( url );
+        QDesktopServices.openUrl( url )
 
 
     def changePreviewScrollOnEditorScroll(self, scrollPosition):
@@ -520,7 +520,7 @@ THE SOFTWARE.</p>""")
     def openGithubPage(self):
         """Open Quark GitHub page in the users default browser."""
 
-        QDesktopServices.openUrl( QUrl("https://github.com/Leonardo2718/Quark_Note_Taker") );
+        QDesktopServices.openUrl( QUrl("https://github.com/Leonardo2718/Quark_Note_Taker") )
 
 
     def displayAboutQt(self):
@@ -533,7 +533,7 @@ THE SOFTWARE.</p>""")
         """Open input dialog to rename the current note."""
 
         currentName = self.noteEditor.getNoteFileName()
-        newName, ok = QInputDialog.getText(self, "Rename This Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName);
+        newName, ok = QInputDialog.getText(self, "Rename This Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName)
 
         if ok and newName is not None and len(newName) > 0:
             currentNotePath = self.noteEditor.getNotePath()
@@ -554,9 +554,9 @@ THE SOFTWARE.</p>""")
         newName = ""
         ok = False
         if type(item) is QuarkNoteModel:
-            newName, ok = QInputDialog.getText(self, "Rename Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName);
+            newName, ok = QInputDialog.getText(self, "Rename Note - Quark Note Taker", "New note name: ", QLineEdit.Normal, currentName)
         elif type(item) is QuarkNotebookModel:
-            newName, ok = QInputDialog.getText(self, "Rename Notebook - Quark Note Taker", "New notebook name: ", QLineEdit.Normal, currentName);
+            newName, ok = QInputDialog.getText(self, "Rename Notebook - Quark Note Taker", "New notebook name: ", QLineEdit.Normal, currentName)
 
 
         if ok and newName is not None and len(newName) > 0:
