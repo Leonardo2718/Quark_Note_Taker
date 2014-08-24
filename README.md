@@ -9,14 +9,14 @@ to create a live preview of the note with support for [MathJax](http://www.mathj
 ##Current features
 * basic markdown syntax highlighting
 * basic note management
-* auto-saveing
+* session saving and loading
+* auto-saving
 * markdown live preview
 * [MathJax](http://www.mathjax.org/) syntax support
 * synchronized scrolling (sort of; see 'Known issues' section)
 
 ##Planed features
 * auto-indenting
-* session saving and loading
 * more customization capabilities
 * template support
 * macro support
