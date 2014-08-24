@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarkExtra.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 17, 2014
+Last Modified: August 23, 2014
 
 Description:
     This file contains extra global data and functions for other Quark source files.
@@ -57,6 +57,12 @@ config = json.loads( configFile.read() )
 configFile.close()
 
 
+#load session settings from JSON file
+sessionFile = open("session.json", "r")
+session = json.loads( sessionFile.read() )
+sessionFile.close()
+
+
 #function to save changed settings
 def saveCurrentConfigSettings(data=None):
     """Write changed configs to the config file."""
@@ -66,6 +72,19 @@ def saveCurrentConfigSettings(data=None):
         data = config
     jsonData = json.dumps(data, sort_keys=True, indent = 4)
     configFile.write( jsonData )
+    configFile.close()
+
+
+
+#function to save the current session
+def saveCurrentSession(sessionData = None):
+    """Write session data to the JSON file."""
+
+    sessionFile = open("session.json", "w")
+    if sessionData == None:
+        sessionData = session
+    jsonData = json.dumps(sessionData, sort_keys=True, indent = 4)
+    sessionFile.write(jsonData)
     configFile.close()
 
 

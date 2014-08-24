@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 19, 2014
+Last Modified: August 23, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -206,7 +206,8 @@ class MainWindow(QMainWindow):
 
         #last minute configs
         self.changeTitle("")        #set default window title
-        self.loadDefaultSettings()  #loads default settings
+        #self.loadDefaultSettings()  #loads default settings
+        self.loadSession()
 
         #setup timer to trigger autosave
         self.autosaveTimer = QTimer(self)                           #create the timer
@@ -219,24 +220,7 @@ class MainWindow(QMainWindow):
         """Cleanup and close the main window."""
 
         self.saveFileAction()   #save the current note
-
-        #get current config
-        if self.action["Note Manager"].isChecked():
-            quarkExtra.config["displayNoteManager"] = "true"
-        else:
-            quarkExtra.config["displayNoteManager"] = "false"
-
-        if self.action["View Editor/Preview Vertically"].isChecked():
-            quarkExtra.config["noteDisplayDirection"] = "true"
-        else:
-            quarkExtra.config["noteDisplayDirection"] = "false"
-
-        for key, value in self.action.items():
-            if value == self.actionGroup["display mode"].checkedAction():
-                quarkExtra.config["defaultViewMode"] = key
-
-        #save current config
-        quarkExtra.saveCurrentConfigSettings()
+        self.saveSession()      #save the user's session
 
         #call parent method
         super(MainWindow, self).closeEvent(event)
@@ -428,26 +412,61 @@ class MainWindow(QMainWindow):
         self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
 
 
-    def loadDefaultSettings(self):
-        """Load some default settings."""
+    def loadSession(self):
+        """Load a session based on the saved session data."""
 
-        viewModeAction = self.action[ quarkExtra.config["defaultViewMode"] ]    #get view mode action
-        viewModeAction.setChecked(True)                                         #check the action in the menu
-        self.changeLayoutModeOnAction(viewModeAction)                           #set the layout
+        #set the note viewing mode
+        viewMode = self.action[ quarkExtra.session["default_view_mode"] ]
+        viewMode.setChecked(True)
+        self.changeLayoutModeOnAction(viewMode)
 
-        if quarkExtra.config["displayNoteManager"] == "true":       #get whether to display the note manager
+        #set the notes manager's visibility
+        if quarkExtra.session["display_note_manager"] == "true":
             self.action["Note Manager"].setChecked(True)
             self.noteManager.setVisible(True)
-        elif quarkExtra.config["displayNoteManager"] == "false":
+        elif quarkExtra.session["display_note_manager"] == "false":
             self.action["Note Manager"].setChecked(False)
             self.noteManager.setVisible(False)
 
-        if quarkExtra.config["noteDisplayDirection"] == "vertical":         #get whether to display note verticaly or horizontally
+        #set the display direction
+        if quarkExtra.session["note_display_direction"] == "vertical":
             self.action["View Editor/Preview Vertically"].setChecked(True)
             self.changeNoteDirectionOnAction(True)
-        elif quarkExtra.config["noteDisplayDirection"] == "horizontal":
+        elif quarkExtra.session["note_display_direction"] == "horizontal":
             self.action["View Editor/Preview Vertically"].setChecked(False)
             self.changeNoteDirectionOnAction(False)
+
+        #open note for editing
+        noteFilePath = quarkExtra.session["opened_note"]
+        if os.path.exists(noteFilePath) and os.path.isfile(noteFilePath) :
+            self.noteEditor.openFileRequest(noteFilePath)
+
+
+    def saveSession(self):
+        """Saves the current session to the JSON file."""
+
+        #save the visibility of the notes manager
+        if self.action["Note Manager"].isChecked():
+            quarkExtra.session["display_note_manager"] = "true"
+        else:
+            quarkExtra.session["display_note_manager"] = "false"
+
+        #save direction of the note displau
+        if self.action["View Editor/Preview Vertically"].isChecked():
+            quarkExtra.session["note_display_direction"] = "vertical"
+        else:
+            quarkExtra.session["note_display_direction"] = "horizontal"
+
+        #save the note viewing mode
+        for key, value in self.action.items():
+            if value == self.actionGroup["display mode"].checkedAction():
+                quarkExtra.session["default_view_mode"] = key
+
+        #save the path of the currently open note
+        quarkExtra.session["opened_note"] = self.noteEditor.getNotePath()
+
+        #write session to the JSON file
+        quarkExtra.saveCurrentSession()
 
 
     def openNoteFromManager(self, itemIndex):
