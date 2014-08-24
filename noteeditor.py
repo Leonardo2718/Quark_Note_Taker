@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: noteeditor.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 17, 2014
+Last Modified: August 24, 2014
 
 Description:
     This file contains the class wich defines the markdown note editor.
@@ -44,7 +44,7 @@ import os
 
 #Qt objects
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtGui import QTextOption
+from PyQt5.QtGui import QTextOption, QFontMetrics
 from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
@@ -62,6 +62,8 @@ class NoteEditor(QPlainTextEdit):
         self.mdHighlighter = MDHighlighter( self.document() )
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
+        tabWidth = QFontMetrics( self.currentCharFormat().font() ).width("    ")#get the width of four spaces
+        self.setTabStopWidth(tabWidth)                                          #set the default tab width to be that of four spaces
 
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
 
