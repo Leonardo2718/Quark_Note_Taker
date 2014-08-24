@@ -70,6 +70,16 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
+        #initialize private variables
+
+        htmlFile = open(quarkExtra.config["start_html_template_file"] , "r")    #get the head of the HTML template document
+        self.htmlDocHead = htmlFile.read()
+        htmlFile.close()
+
+        htmlFile = open(quarkExtra.config["end_html_template_file"], "r")       #get the tail of the HTML template document
+        self.htmlDocTail = htmlFile.read()
+        htmlFile.close()
+
         #setup the main window menu
         self.mainToolBar = self.addToolBar("Main Toolbar")
         self.mainToolBar.setMovable(False)
@@ -258,18 +268,8 @@ class MainWindow(QMainWindow):
         #create markdown parser
         parser = markdown.Markdown(['extra', 'toc', 'sane_lists'])
 
-        #create an html document using the start (top/head) HTML template
-        htmlFile = open(quarkExtra.config["start_html_template_file"] , "r")
-        htmlDoc = htmlFile.read()
-        htmlFile.close()
-
-        #convert markdown note to html and append the result to the HTML document
-        htmlDoc = htmlDoc + parser.convert(noteMarkdown)
-
-        #append the end (bottom/foot) template to the HTML document
-        htmlFile = open(quarkExtra.config["end_html_template_file"], "r")
-        htmlDoc = htmlDoc + htmlFile.read()
-        htmlFile.close()
+        #create an HTML document using the predefined head, the HTML form of the note, and the predefined tail
+        htmlDoc = self.htmlDocHead + parser.convert(noteMarkdown) + self.htmlDocTail
 
         return htmlDoc
 
