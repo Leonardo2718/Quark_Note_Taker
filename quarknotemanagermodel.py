@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 23, 2014
+Last Modified: August 24, 2014
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -100,6 +100,7 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
             promptDialog.exec()                                             #
             notesDir = promptDialog.getNotesPath()                          #
             quarkExtra.config["notes_dir"] = notesDir                       #save the directory path
+            quarkExtra.saveCurrentConfigSettings()                          #write changes to the config file
             if not os.path.exists(notesDir):                                #if the directory does not exits yet, create it
                 os.makedirs(notesDir)
 
