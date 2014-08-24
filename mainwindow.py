@@ -206,7 +206,6 @@ class MainWindow(QMainWindow):
 
         #last minute configs
         self.changeTitle("")        #set default window title
-        #self.loadDefaultSettings()  #loads default settings
         self.loadSession()
 
         #setup timer to trigger autosave
