@@ -1,20 +1,20 @@
 #Configuring Quark Note Taker
 
 Quark can be configured by simply editing some files plain text files.  Note that any
-changes to any config files will not take effect untill quark is restarted.
+changes to any config files will not take effect until quark is restarted.
 
 
 ##General Configuration
 
 The most basic configurations can be set by editing the `config.json` file.
-This simple [JSON](http://json.org/) file containes some key-value pairs which define
-the properties and behaviour of Quark.  The following is a list of the supported
+This simple [JSON](http://json.org/) file contains some key-value pairs which define
+the properties and behavior of Quark.  The following is a list of the supported
 properties:
 
 * `"autosave_every"`: 
     - type: string
-    - description: defines the time interval between autosaves in seconds (how long to
-wait before the next autosave)
+    - description: defines the time interval between auto-saves in seconds (how long to
+wait before the next auto-save)
     - default value: `"300000"` (300000 seconds = 5 minutes)
 * `"end_html_template_file"`  
     - type: string
@@ -35,7 +35,7 @@ to HTML conversion
 file which is used to style the Quark user interface (not the note preview)
     - default value: `"themes/default.css"`
 
-You can change the value of any of these properties to custumize Quark.  If you change
+You can change the value of any of these properties to customize Quark.  If you change
 the value of any property which defines a file or directory path,
 *make sure the path actually exists*!
 
@@ -70,12 +70,12 @@ above.  Here are some *suggested* guidelines for structuring the files:
 
 * `html-template/htmlDoc_start.html` should contain the "head" of the final HTML
 document.  This file should contain the HTML `head` element, which further contains
-the document's CSS and Javascript as well as any other relavent HTML elements.
+the document's CSS and Javascript as well as any other relevant HTML elements.
 Because an HTML note (generated from Markdown) will be appended to this
-file's content, you should end the file with the `<body>` openning tag.
+file's content, you should end the file with the `<body>` opening tag.
 
 * `html-template/htmlDoc_end.html` should contain the "tail" of the final HTML
 document.  This file should begin with the `</body>` closing tag.  Unless you
-*explicitely* want to add some extra elements to your HTML notes, the only other
+*explicitly* want to add some extra elements to your HTML notes, the only other
 items present in this file should be the closing tags for tags that are opened in the 
 `html-template/htmlDoc_start.html` file.
