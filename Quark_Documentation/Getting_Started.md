@@ -123,3 +123,6 @@ these files will only affect how the note is *previewed* and *not* the note itse
 So if you add any special features (such as a footer) they will not be displayed if
 you choose to open your note in a different editor (unless you export your note to an
 HTML file).
+
+To enable/disable synchronized scrolling, you check/uncheck the menu item
+`View > Synchronized Scrolling`.
