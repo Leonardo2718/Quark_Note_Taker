@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 24, 2014
+Last Modified: September 2, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -123,6 +123,9 @@ class MainWindow(QMainWindow):
 
         #create shorcuts for actions in 'File' menu
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
+        self.action["View Mode"].setShortcut( QKeySequence("Ctrl+E") )
+        self.action["Edit Mode"].setShortcut( QKeySequence("Ctrl+R") )
+        self.action["View & Edit Mode"].setShortcut( QKeySequence("Ctrl+Shift+E") )
 
         #set check state for actions in 'File' menu
         self.action["View Mode"].setCheckable(True)
