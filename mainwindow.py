@@ -80,6 +80,8 @@ class MainWindow(QMainWindow):
         self.htmlDocTail = htmlFile.read()
         htmlFile.close()
 
+        self._syncScroll = False    #variable to hold the state of synchronized scrolling (not synchronized)
+
         #setup the main window menu
         self.mainToolBar = self.addToolBar("Main Toolbar")
         self.mainToolBar.setMovable(False)
@@ -118,6 +120,7 @@ class MainWindow(QMainWindow):
         self.menu["View"].addAction( self.action["View & Edit Mode"] )
         self.menu["View"].addSeparator()
         self.action["View Editor/Preview Vertically"] = self.menu["View"].addAction("View Editor/Preview &Vertically")
+        self.action["Synchronized Scrolling"] = self.menu["View"].addAction("&Synchronized Scrolling")
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
 
@@ -133,6 +136,7 @@ class MainWindow(QMainWindow):
         self.action["View & Edit Mode"].setCheckable(True)
         self.action["View Editor/Preview Vertically"].setCheckable(True)
         self.action["Note Manager"].setCheckable(True)
+        self.action["Synchronized Scrolling"].setCheckable(True)
 
         #create actions for 'Help' menu
         self.action["About Quark Note Taker"] = self.menu["Help"].addAction("&About Quark Note Taker")
@@ -197,6 +201,7 @@ class MainWindow(QMainWindow):
         self.action["Note Manager"].toggled.connect(self.noteManager.setVisible)
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
         self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
+        self.action["Synchronized Scrolling"].toggled.connect(self.setSyncScroll)
 
         #connect signals in 'Help' menu to slots
         self.action["About Quark Note Taker"].triggered.connect(self.displayAboutQuark)
@@ -405,17 +410,18 @@ class MainWindow(QMainWindow):
     def scrollPreview(self):
         """Scrolles note preview to same 'height' as editor."""
 
-        editorVal = self.noteEditor.verticalScrollBar().value()     #get the scroll height of the editor window
-        if editorVal == 0:                                          #if it is '0' then just seth the height of the preview window to '0' also (can prevent division by zero error)
-            viewVal = 0
-        else:                                                       #otherwise calculate the corresponding scroll height for the preview window
-            editorMax = self.noteEditor.verticalScrollBar().maximum()
-            editorMin = self.noteEditor.verticalScrollBar().minimum()
-            viewMax = self.notePreview.page().mainFrame().scrollBarMaximum(Qt.Vertical)
-            viewMin = self.notePreview.page().mainFrame().scrollBarMinimum(Qt.Vertical)
-            viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
+        if self._syncScroll == True:
+            editorVal = self.noteEditor.verticalScrollBar().value()     #get the scroll height of the editor window
+            if editorVal == 0:                                          #if it is '0' then just seth the height of the preview window to '0' also (can prevent division by zero error)
+                viewVal = 0
+            else:                                                       #otherwise calculate the corresponding scroll height for the preview window
+                editorMax = self.noteEditor.verticalScrollBar().maximum()
+                editorMin = self.noteEditor.verticalScrollBar().minimum()
+                viewMax = self.notePreview.page().mainFrame().scrollBarMaximum(Qt.Vertical)
+                viewMin = self.notePreview.page().mainFrame().scrollBarMinimum(Qt.Vertical)
+                viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
 
-        self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
+            self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
 
 
     def loadSession(self):
@@ -447,6 +453,14 @@ class MainWindow(QMainWindow):
         if os.path.exists(noteFilePath) and os.path.isfile(noteFilePath) :
             self.noteEditor.openFileRequest(noteFilePath)
 
+        #set synchronized scrolling state
+        if quarkExtra.session["synchronized_scrolling"] == "true":
+            self.action["Synchronized Scrolling"].setChecked(True)
+            self._syncScroll = True
+        elif quarkExtra.session["synchronized_scrolling"] == "false":
+            self.action["Synchronized Scrolling"].setChecked(False)
+            self._syncScroll = False
+
 
     def saveSession(self):
         """Saves the current session to the JSON file."""
@@ -470,6 +484,12 @@ class MainWindow(QMainWindow):
 
         #save the path of the currently open note
         quarkExtra.session["opened_note"] = self.noteEditor.getNotePath()
+
+        #save synchronized scrolling state
+        if self.action["Synchronized Scrolling"].isChecked() and self._syncScroll == True :
+            quarkExtra.session["synchronized_scrolling"] = "true"
+        else:
+            quarkExtra.session["synchronized_scrolling"] = "false"
 
         #write session to the JSON file
         quarkExtra.saveCurrentSession()
@@ -657,3 +677,9 @@ defines the position of the item."""
             exportFile.close()                      #
             self.exportToHTMLFile(filePath)         #export HTML to the file
             self.noteManager.model().updateModel()  #update the notes manager in case the exported file was saved in the user's notes directory
+
+
+    def setSyncScroll(self, state):
+        """Toggles flag which controles the synchronized scrolling."""
+
+        self._syncScroll = state
