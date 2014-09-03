@@ -124,13 +124,13 @@ class MainWindow(QMainWindow):
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
 
-        #create shorcuts for actions in 'File' menu
+        #create shorcuts for actions in 'View' menu
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
         self.action["View Mode"].setShortcut( QKeySequence("Ctrl+E") )
         self.action["Edit Mode"].setShortcut( QKeySequence("Ctrl+R") )
         self.action["View & Edit Mode"].setShortcut( QKeySequence("Ctrl+Shift+E") )
 
-        #set check state for actions in 'File' menu
+        #set check state for actions in 'View' menu
         self.action["View Mode"].setCheckable(True)
         self.action["Edit Mode"].setCheckable(True)
         self.action["View & Edit Mode"].setCheckable(True)
