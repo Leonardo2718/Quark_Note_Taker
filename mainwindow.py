@@ -126,8 +126,8 @@ class MainWindow(QMainWindow):
 
         #create shorcuts for actions in 'View' menu
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
-        self.action["View Mode"].setShortcut( QKeySequence("Ctrl+E") )
-        self.action["Edit Mode"].setShortcut( QKeySequence("Ctrl+R") )
+        self.action["View Mode"].setShortcut( QKeySequence("Ctrl+R") )
+        self.action["Edit Mode"].setShortcut( QKeySequence("Ctrl+E") )
         self.action["View & Edit Mode"].setShortcut( QKeySequence("Ctrl+Shift+E") )
 
         #set check state for actions in 'View' menu
