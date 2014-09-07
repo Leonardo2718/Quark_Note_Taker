@@ -597,7 +597,8 @@ THE SOFTWARE.</p>""")
 defines the position of the item."""
 
         itemModelIndex = self.noteManager.indexAt(position)         #get the model index of the selected item
-        if itemModelIndex == self.noteManager.selectedIndexes()[0]: #only process the request if the item was right-clicked (i.e. it is selected)
+        selections = self.noteManager.selectedIndexes()
+        if len(selections) > 0 and itemModelIndex == selections[0]: #only process the request if the item was right-clicked (i.e. it is selected)
                                                                     #   note that only a single item may be selected at a time
             item = itemModelIndex.internalPointer()
             tempMenu = QMenu(self.noteManager)
