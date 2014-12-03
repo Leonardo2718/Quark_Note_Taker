@@ -179,8 +179,10 @@ class MainWindow(QMainWindow):
         self.noteArea.addWidget(self.noteEditor)
 
         #create and set the note previewer
-        self.notePreview = QWebView(self.noteArea)          #note preview widget
-        self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
+        #self.notePreview = QWebView(self.noteArea)          #note preview widget
+        #self.notePreview.page().setLinkDelegationPolicy(QWebPage.DelegateExternalLinks)
+        self.notePreview = QTextEdit(self.noteArea)
+        self.notePreview.setReadOnly(True)
         previewSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         previewSizePolicy.setHorizontalStretch(1)
         previewSizePolicy.setVerticalStretch(1)
@@ -214,7 +216,7 @@ class MainWindow(QMainWindow):
         self.noteEditor.verticalScrollBar().valueChanged.connect(self.changePreviewScrollOnEditorScroll)
 
         #connect signals from the note previewer to slots
-        self.notePreview.page().linkClicked.connect(self.linkClickHandler)
+        #self.notePreview.page().linkClicked.connect(self.linkClickHandler)
 
         #connect signals from the note manager to slots
         self.noteManager.doubleClicked.connect(self.openNoteFromManager)
@@ -295,7 +297,8 @@ class MainWindow(QMainWindow):
         #self.exportToHTMLFile("_output.html")
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+        #self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+        self.notePreview.setHtml(htmlDocument)
 
 
     def openFileAction(self):
