@@ -298,8 +298,10 @@ class MainWindow(QMainWindow):
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         #self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+        pos = self.notePreview.verticalScrollBar().sliderPosition()
         self.notePreview.setHtml(htmlDocument)
-
+        self.notePreview.verticalScrollBar().setSliderPosition(pos)
+        #self.notePreview.scrollContentsBy(0, 100);
 
     def openFileAction(self):
         """Open an existing file by getting its path from a dialog."""
