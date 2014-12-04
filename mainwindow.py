@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: September 2, 2014
+Last Modified: December 3, 2014
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -211,10 +211,12 @@ class MainWindow(QMainWindow):
         #connect signals from the note editor to slots
         self.noteEditor.textChanged.connect(self.updatePreview)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
-        self.noteEditor.verticalScrollBar().valueChanged.connect(self.changePreviewScrollOnEditorScroll)
+        self.noteEditor.verticalScrollBar().valueChanged.connect(self.syncPreviewScroll)
 
         #connect signals from the note previewer to slots
         self.notePreview.page().linkClicked.connect(self.linkClickHandler)
+        self.notePreview.page().mainFrame().contentsSizeChanged.connect(self.syncPreviewScroll)
+            #this connection is made to prevent the previewer from scrolling to the top on every edit
 
         #connect signals from the note manager to slots
         self.noteManager.doubleClicked.connect(self.openNoteFromManager)
@@ -297,6 +299,7 @@ class MainWindow(QMainWindow):
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
 
+
     def openFileAction(self):
         """Open an existing file by getting its path from a dialog."""
 
@@ -317,7 +320,6 @@ class MainWindow(QMainWindow):
                 self.saveAsFileAction()
         else:                                   #else, just save the file
             self.noteEditor.saveFileRequest()
-            self.scrollPreview()                    #scroll preview to edited line
 
 
     def saveAsFileAction(self):
@@ -329,7 +331,6 @@ class MainWindow(QMainWindow):
         if filePath[0] != "":                                                   #do not perform the save if the user pressed the 'cancel' button
             self.noteEditor.saveAsRequested(filePath[0])
 
-        self.scrollPreview()                                                    #scroll preview to edited line
         self.noteManager.model().updateModel()                                          #update the note manager
 
 
@@ -342,7 +343,6 @@ class MainWindow(QMainWindow):
         if filePath[0] != "":
             self.noteEditor.saveCopyAsRequested(filePath[0])
 
-        self.scrollPreview()    #scroll preview to edited line
         self.noteManager.model().updateModel()
 
 
@@ -394,20 +394,8 @@ class MainWindow(QMainWindow):
         QDesktopServices.openUrl( url )
 
 
-    def changePreviewScrollOnEditorScroll(self, scrollPosition):
+    def syncPreviewScroll(self):
         """Scrolles note preview when editor is scrolled ('scrollPosition' is not used)."""
-
-        self.scrollPreview()
-
-
-    def changePreviewScrollOnLoadFinished(self, ok):
-        """Scrolles note preview when page is reloaded ('ok' is not used)."""
-
-        self.scrollPreview()
-
-
-    def scrollPreview(self):
-        """Scrolles note preview to same 'height' as editor."""
 
         if self._syncScroll == True:
             editorVal = self.noteEditor.verticalScrollBar().value()     #get the scroll height of the editor window
@@ -421,6 +409,24 @@ class MainWindow(QMainWindow):
                 viewVal = editorVal/(editorMax - editorMin)*(viewMax - viewMin)
 
             self.notePreview.page().mainFrame().setScrollBarValue(Qt.Vertical, viewVal) #set the calculated scroll height on the preview window
+
+
+    def syncEditScroll(self):
+        """Scrolles note editor when previewer is scrolled ('scrollPosition' is not used)."""
+        #This method is not currently used as I haven't found an appropriate signal to connect it to
+
+        if self._syncScroll == True:
+            viewVal = self.notePreview.page().mainFrame().scrollBarValue(Qt.Vertical)
+            if viewVal == 0:
+                editorVal = 0
+            else:
+                viewMax = self.notePreview.page().mainFrame().scrollBarMaximum(Qt.Vertical)
+                viewMin = self.notePreview.page().mainFrame().scrollBarMinimum(Qt.Vertical)
+                editorMax = self.noteEditor.verticalScrollBar().maximum()
+                editorMin = self.noteEditor.verticalScrollBar().minimum()
+                editorVal = viewVal/(viewMax - viewMin)*(editorMax - editorMin)
+
+            self.noteEditor.verticalScrollBar().setValue(editorVal)
 
 
     def loadSession(self):

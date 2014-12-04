@@ -11,18 +11,18 @@
     - download from the [GitHub page](https://github.com/Leonardo2718/Quark_Note_Taker) or
     - clone the repository: `git clone https://github.com/Leonardo2718/Quark_Note_Taker.git`
 3. To run Quark, simply run the file named `quark.py`
-    - *Note: on Windows, you may need to change the extension from `.py` to `.pyw`*
+    - *Note: on Windows, you may need to change the file extension from `.py` to `.pyw`*
 4. When you first run Quark, you will be prompted to create a new directory to store all your
 Quark notes.  Files which are stored in this directory will be shown in the Quark notes
 manager.  I recommended you keep this directory **for Quark notes only**.  If you need
 to add files which are stored in a different directory, you should create a link to
-those files inside you notes directory.  Once the directory has been created, Quark will
-copy this program's main `README.md` file to it.  
+those files inside your notes directory.  Once the directory has been created, Quark will
+copy the main `README.md` file to it together with a copy of this documentation.  
 *(Note: In the event that you do not specify a notes directory,*
 *Quark will default to use the source code's directory as your notes directory.)*
 5. Once you've created your notes directory, Quark will start and automatically open the
 `README.md` file. If this does not happen, you can manualy open any file you want by using
-`File->Open` of typing `Ctrl+O` on your keyboard.
+`File->Open` or by using `Ctrl+O`.
 
 ##Using Quark
 When you open Quark for the first time, by default, you are presented with a window
@@ -43,22 +43,21 @@ to view and edit your note.
 You can also control the "display mode", which controls how the note editor and preview
 are displayed.  There are three possible display modes:
 
-1. View Mode: only display the HTML/preview version of the note without the editor
-2. Edit Mode: only display the note editor without the preview
-(useful for distraction free editing)
-3. View & Edit Mode: display both the note editor and preview side-by-side
+1. View Mode: only display the HTML/preview version of the note without the editor (use `Ctrl+R`)
+2. Edit Mode: only display the note editor without the preview (use `Ctrl+E`)
+3. View & Edit Mode: display both the note editor and preview side-by-side (use `Ctrl+Shift+E`)
 
 You can use the `View > View Editor/Preview Vertically` option to control the layout of
-the note editor and preview.  If this option is not checked, then the note preview will
-be displayed *to the right* of the editor.  If this option is checked, then the note
-preview will be displayed *below* the the editor.  Note that this option has no effect
+the note editor and preview.  If this option is not checked, the note preview will
+be displayed **to the right** of the editor.  If this option is checked, then the note
+preview will be displayed **below** the the editor.  Note that this option has no effect
 on the notes manager.
 
 Using the `File` menu you can do things such as saving, opening, renaming, and creating
 new notes as well as notebooks.
 
-You can export your Markdown note to an HTML file by using `File->Export to HTML`.  When
-you click on this option, Quark will prompt you for the name and location of the file to
+You can export your Markdown note to an HTML file by using `File > Export to HTML`.  When
+you click on this option, Quark will prompt you for the name and location of the file in
 which you want to export your note.  The exported HTML will be the same as the HTML used
 to display the note preview.
 
@@ -70,14 +69,13 @@ short cut.
 
 The manager reflects the state of your notes directory in a tree-structure display.
 All (non-hidden) files in your notes directory are shown as notes, and all sub-directory
-are notebooks.  Sub-directories inside notebooks are ignored as it does not make sense
-to have notebooks within notebooks.  Note that notebooks are (arbitrarily)
+are notebooks.  Sub-directories inside notebooks are ignored because it doesn't make 
+sense to have notebooks within notebooks.  Note that notebooks are (arbitrarily)
 always displayed after notes.
 
 Double clicking on a note will open the note in *both* the editor and preview.  
 Right-clicking on a note or notebook will show an action menu for the particular
-item.  Some of the actions shown include the ability to renaming and removing a
-note or notebook.
+item.  Some of the actions shown include the ability to rename or remove the item.
 
 ###The Editor
 
@@ -92,16 +90,10 @@ Quark.  This ensures that you do not lose any work.
 
 ###The Preview
 
-The note preview shows you the HTML version of your note live as you are editing.
-Scrolling the editor will auto-scroll the preview.  However, scrolling the preview
-*will not* auto-scroll the editor.  There is currently a bug where every time you
-type a change into the editor, the preview will scroll back to the top.  At the
-moment, there is no way around this.  However, the preview will automatically
-scroll to the line you are editing whenever you save your note (even when it's an
-auto-save).  Keep in mind that you do not need to display both the editor and the
-preview.  You can select to only view one of the two by changing the display mode
-using the `View` menu.
-*(Note: I generally prefer to view the two separately so there is more room on my screen)*
+The note preview shows you the HTML version of your note as you are editing.
+Scrolling the editor will automatically scroll the preview.  However, scrolling the 
+preview **will not** scroll the editor.  To enable/disable synchronized scrolling, 
+check/uncheck the menu item `View > Synchronized Scrolling`.
 
 The preview is generated by converting the note's markdown to HTML (using
 [Markdown](https://pypi.python.org/pypi/Markdown) for python) and inserting the
@@ -114,7 +106,7 @@ Once the note is converted to HTML, the output is inserted between the contents 
 the two files.  The result is then displayed in the preview section.
 
 If you wish to change how notes are displayed in the preview, you can do so by
-modifying the two template files (mentioned above).  The main file you will want to
+modifying the two template files.  The main file you will want to
 edit is  `html-template/htmlDoc_start.html` because it contains all the CSS and
 Javascript used in the HTML preview. The `html-template/htmlDoc_end.html` file only
 contains some closing tags necessary for valid HTML.  You could edit this
@@ -123,6 +115,3 @@ these files will only affect how the note is *previewed* and *not* the note itse
 So if you add any special features (such as a footer) they will not be displayed if
 you choose to open your note in a different editor (unless you export your note to an
 HTML file).
-
-To enable/disable synchronized scrolling, you check/uncheck the menu item
-`View > Synchronized Scrolling`.

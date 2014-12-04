@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 24, 2014
+Last Modified: December 3, 2014
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -109,6 +109,12 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
                 readmeFile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "README.md") #get path to Quark's main 'README.md' file
                 if os.path.exists(readmeFile):                                                      #if it exists, copy it to the notes directory
                     shutil.copyfile(readmeFile, readmeNotePath)
+
+            docsPath = os.path.join(notesDir, "Quark_Documentation")        #create path to the Quark documentation notebook
+            if not os.path.exists(docsPath):
+                docs = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Quark_Documentation")
+                if os.path.exists(docs) and os.path.isdir(docs):
+                    shutil.copytree(docs, docsPath)
 
         self.updateModel()  #load data from notes dir
 
