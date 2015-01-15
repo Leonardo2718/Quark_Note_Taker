@@ -5,13 +5,13 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: December 3, 2014
+Last Modified: January 14, 2015
 
 Description:
     This file contains the class wich defines the main application window for Quark.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -209,7 +209,8 @@ class MainWindow(QMainWindow):
         self.action["About Qt"].triggered.connect(self.displayAboutQt)
 
         #connect signals from the note editor to slots
-        self.noteEditor.textChanged.connect(self.updatePreview)
+        #self.noteEditor.textChanged.connect(self.updatePreview)
+        self.noteEditor.textChanged.connect(self.updateSlot)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
         self.noteEditor.verticalScrollBar().valueChanged.connect(self.syncPreviewScroll)
 
@@ -255,6 +256,7 @@ class MainWindow(QMainWindow):
         if action == self.action["View Mode"] :         #if the user choses to only display the note preview
             self.noteEditor.setVisible(False)
             self.notePreview.setVisible(True)
+            self.updatePreview()
 
         elif action == self.action["Edit Mode"] :       #if the user choses to only display the note editor
             self.noteEditor.setVisible(True)
@@ -263,6 +265,7 @@ class MainWindow(QMainWindow):
         elif action == self.action["View & Edit Mode"] :  #if the user choses to display both the note editor and note preview
             self.noteEditor.setVisible(True)
             self.notePreview.setVisible(True)
+            self.updatePreview()
 
 
     def changeNoteDirectionOnAction(self, isVertical):
@@ -298,6 +301,13 @@ class MainWindow(QMainWindow):
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+
+
+    def updateSlot(self):
+        """Slot called to update the previewer when the text in the note editor changes."""
+
+        if self.notePreview.isVisible() :
+            self.updatePreview()
 
 
     def openFileAction(self):
@@ -432,19 +442,6 @@ class MainWindow(QMainWindow):
     def loadSession(self):
         """Load a session based on the saved session data."""
 
-        #set the note viewing mode
-        viewMode = self.action[ quarkExtra.session["default_view_mode"] ]
-        viewMode.setChecked(True)
-        self.changeLayoutModeOnAction(viewMode)
-
-        #set the notes manager's visibility
-        if quarkExtra.session["display_note_manager"] == "true":
-            self.action["Note Manager"].setChecked(True)
-            self.noteManager.setVisible(True)
-        elif quarkExtra.session["display_note_manager"] == "false":
-            self.action["Note Manager"].setChecked(False)
-            self.noteManager.setVisible(False)
-
         #set the display direction
         if quarkExtra.session["note_display_direction"] == "vertical":
             self.action["View Editor/Preview Vertically"].setChecked(True)
@@ -457,6 +454,20 @@ class MainWindow(QMainWindow):
         noteFilePath = quarkExtra.session["opened_note"]
         if os.path.exists(noteFilePath) and os.path.isfile(noteFilePath) :
             self.noteEditor.openFileRequest(noteFilePath)
+
+        #set the note viewing mode
+        viewMode = self.action[ quarkExtra.session["default_view_mode"] ]
+        viewMode.setChecked(True)
+        self.changeLayoutModeOnAction(viewMode)
+
+        #set the notes manager's visibility
+        if quarkExtra.session["display_note_manager"] == "true":
+            self.action["Note Manager"].setChecked(True)
+            self.noteManager.setVisible(True)
+            self.updatePreview()
+        elif quarkExtra.session["display_note_manager"] == "false":
+            self.action["Note Manager"].setChecked(False)
+            self.noteManager.setVisible(False)
 
         #set synchronized scrolling state
         if quarkExtra.session["synchronized_scrolling"] == "true":
@@ -482,13 +493,13 @@ class MainWindow(QMainWindow):
         else:
             quarkExtra.session["note_display_direction"] = "horizontal"
 
+        #save the path of the currently open note
+        quarkExtra.session["opened_note"] = self.noteEditor.getNotePath()
+
         #save the note viewing mode
         for key, value in self.action.items():
             if value == self.actionGroup["display mode"].checkedAction():
                 quarkExtra.session["default_view_mode"] = key
-
-        #save the path of the currently open note
-        quarkExtra.session["opened_note"] = self.noteEditor.getNotePath()
 
         #save synchronized scrolling state
         if self.action["Synchronized Scrolling"].isChecked() and self._syncScroll == True :
