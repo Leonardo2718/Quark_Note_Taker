@@ -44,7 +44,7 @@ import os
 
 #Qt objects
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtGui import QTextOption, QFontMetrics
+from PyQt5.QtGui import QTextOption, QFontMetrics, QFont
 from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
@@ -62,6 +62,7 @@ class NoteEditor(QPlainTextEdit):
         self.mdHighlighter = MDHighlighter( self.document() )
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
+        self.setFont(QFont("Monospace"))
         tabWidth = QFontMetrics( self.currentCharFormat().font() ).width("    ")#get the width of four spaces
         self.setTabStopWidth(tabWidth)                                          #set the default tab width to be that of four spaces
 
