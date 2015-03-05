@@ -3,7 +3,8 @@ Quark Note Taker is an opensource, cross platform, Markdown based note taking ap
 All notes are stored as plain-text/markdown files. Quark is highly customizable as all files are editable
 by the user.  It uses the [PyQt](http://www.riverbankcomputing.com/software/pyqt/intro)
 framework for the user interface and [Python Markdown](https://github.com/waylan/Python-Markdown)
-to create a live preview of the note with support for [MathJax](http://www.mathjax.org/).
+to create a live preview of the note with support for [MathJax](http://www.mathjax.org/).  The live preview
+also suports syntax highlighting for code blocks using [Highlight.js](https://highlightjs.org/).
 
 ##Current features
 * basic markdown syntax highlighting
@@ -11,6 +12,7 @@ to create a live preview of the note with support for [MathJax](http://www.mathj
 * session saving and loading
 * auto-saving
 * markdown live preview
+* syntax highlighting for code blocks using [Highlight.js](https://highlightjs.org/)
 * [MathJax](http://www.mathjax.org/) syntax support
 * synchronized scrolling
 
