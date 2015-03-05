@@ -281,6 +281,7 @@ class MainWindow(QMainWindow):
         """Converts note text/markdown to an html document"""
 
         #create markdown parser
+        #parser = markdown.Markdown(['extra', 'toc', 'sane_lists', 'markdown.extensions.fenced_code'])
         parser = markdown.Markdown(['extra', 'toc', 'sane_lists'])
 
         #create an HTML document using the predefined head, the HTML form of the note, and the predefined tail
