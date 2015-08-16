@@ -208,9 +208,17 @@ class MainWindow(QMainWindow):
         self.action["View GitHub Page"].triggered.connect(self.openGithubPage)
         self.action["About Qt"].triggered.connect(self.displayAboutQt)
 
+        # setup timer that delays the editor view update when editing a note
+        self.updateDelayTimer = QTimer(self)
+        self.updateDelayTimer.setSingleShot(True)
+        updateDelay = int(quarkExtra.config["update_delay"])   # get the delay time (in milliseconds) from the config file
+        self.updateDelayTimer.setInterval(updateDelay)
+        self.updateDelayTimer.timeout.connect(self.updateSlot)
+
         #connect signals from the note editor to slots
         #self.noteEditor.textChanged.connect(self.updatePreview)
-        self.noteEditor.textChanged.connect(self.updateSlot)
+        #self.noteEditor.textChanged.connect(self.updateSlot)
+        self.noteEditor.textChanged.connect(self.updateDelayTimer.start)
         self.noteEditor.noteFileChanged.connect(self.changeTitle)
         self.noteEditor.verticalScrollBar().valueChanged.connect(self.syncPreviewScroll)
 
