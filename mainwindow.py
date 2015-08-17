@@ -288,15 +288,14 @@ class MainWindow(QMainWindow):
     def mdNoteToHtml(self, noteMarkdown):
         """Converts note text/markdown to an html document"""
 
-        #create markdown parser
-        #parser = markdown.Markdown(['extra', 'toc', 'sane_lists', 'markdown.extensions.fenced_code'])
-        #parser = markdown.Markdown(['extra', 'toc', 'sane_lists', 'codehilite'])
+        # create markdown parser
         parser = markdown.Markdown(
             extensions=["markdown.extensions.extra","markdown.extensions.toc","markdown.extensions.sane_lists","markdown.extensions.codehilite"],
             extension_configs = {
                 'markdown.extensions.codehilite' : {'noclasses': 'True','pygments_style': 'monokai'}
-            }) # xcode, default, manni, bw, emacs, murphy, vim, perldoc, native!, paraiso-light, trac, fruity!, colorful, tango, vs, autumn,
-               # borland, paraiso-dark, pastie, friendly, monokai!, rrt, igor
+            })
+        # Possible styles include: xcode, default, manni, bw, emacs, murphy, vim, perldoc, native!, paraiso-light, trac,
+        #   fruity!, colorful, tango, vs, autumn, borland, paraiso-dark, pastie, friendly, monokai!, rrt, igor
 
         #create an HTML document using the predefined head, the HTML form of the note, and the predefined tail
         htmlDoc = self.htmlDocHead + parser.convert(noteMarkdown) + self.htmlDocTail
