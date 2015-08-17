@@ -5,13 +5,13 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: December 3, 2014
+Last Modified: August 16, 2015
 
 Description:
     This file contains the class which models the Quark note manager.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -45,11 +45,10 @@ import shutil
 
 #Qt objects
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
-#from PyQt5.QtGui import *
-#from PyQt5.QtWidgets import *
 
 #Quark specific
 import quarkExtra
+import settings as quarkSettings
 from quarknotebookmodel import QuarkNotebookModel
 from quarknotemodel import QuarkNoteModel
 
@@ -93,13 +92,13 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
         self._noteList = []     #initialize empty list of notes
         self._notebookList = [] #initialize empty list of notebooks
 
-        notesDir = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])  #get the Quark notes directory from the config file
+        notesDir = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir) #get the Quark notes directory from the config file
 
         if not os.path.exists(notesDir):                            #if the the notes directory does note exits, open/create one
             promptDialog = quarkExtra.GetNotesDirDialog(notesDir, parent)   #prompt the user for for a directory path
             promptDialog.exec()                                             #
             notesDir = promptDialog.getNotesPath()                          #
-            quarkExtra.config["notes_dir"] = notesDir                       #save the directory path
+            #quarkExtra.config["notes_dir"] = notesDir                       #save the directory path
             quarkExtra.saveCurrentConfigSettings()                          #write changes to the config file
             if not os.path.exists(notesDir):                                #if the directory does not exits yet, create it
                 os.makedirs(notesDir)
@@ -122,7 +121,7 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
     def updateModel(self):
         """Updates the model to match the filesystem."""
 
-        notesDir = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])  #get the Quark notes directory from the config file
+        notesDir = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)  #get the Quark notes directory from the config file
 
         self.beginResetModel()
 

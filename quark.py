@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quark.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 24, 2014
+Last Modified: August 16, 2015
 
 Description:
     Quark Note Taker is an opensource note taking application.  Notes are stored
@@ -15,7 +15,7 @@ Description:
     by the user.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -49,7 +49,7 @@ from PyQt5.QtWidgets import QApplication
 
 #Quark specific modules
 from mainwindow import MainWindow
-import quarkExtra
+import settings as quarkSettings
 
 
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     print("""
 Quark Note Taker (view GitHub page at: https://github.com/Leonardo2718/Quark_Note_Taker)
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -86,7 +86,7 @@ THE SOFTWARE.
     app = QApplication(sys.argv)
     win = MainWindow()
 
-    themeFile = open(quarkExtra.config["theme_file"], "r")
+    themeFile = open(quarkSettings.theme_file, "r")
     app.setStyleSheet(themeFile.read())
     themeFile.close()
 

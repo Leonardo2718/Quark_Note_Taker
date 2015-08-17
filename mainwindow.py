@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: January 14, 2015
+Last Modified: August 16, 2015
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -55,6 +55,7 @@ from PyQt5.QtWebKitWidgets import *
 
 #Quark specific
 import quarkExtra
+import settings as quarkSettings
 from noteeditor import NoteEditor
 from quarknotemanagermodel import QuarkNoteManagerModel
 from quarknotemodel import QuarkNoteModel
@@ -72,11 +73,11 @@ class MainWindow(QMainWindow):
 
         #initialize private variables
 
-        htmlFile = open(quarkExtra.config["start_html_template_file"] , "r")    #get the head of the HTML template document
+        htmlFile = open(quarkSettings.start_html_template_file , "r")   #get the head of the HTML template document
         self.htmlDocHead = htmlFile.read()
         htmlFile.close()
 
-        htmlFile = open(quarkExtra.config["end_html_template_file"], "r")       #get the tail of the HTML template document
+        htmlFile = open(quarkSettings.end_html_template_file, "r")      #get the tail of the HTML template document
         self.htmlDocTail = htmlFile.read()
         htmlFile.close()
 
@@ -220,7 +221,7 @@ class MainWindow(QMainWindow):
         # setup timer that delays the editor view update when editing a note
         self.updateDelayTimer = QTimer(self)
         self.updateDelayTimer.setSingleShot(True)
-        updateDelay = int(quarkExtra.config["update_delay"])   # get the delay time (in milliseconds) from the config file
+        updateDelay = int(quarkSettings.update_delay)   # get the delay time (in milliseconds) from the config file
         self.updateDelayTimer.setInterval(updateDelay)
         self.updateDelayTimer.timeout.connect(self.updateSlot)
 
@@ -253,8 +254,9 @@ class MainWindow(QMainWindow):
         #setup timer to trigger autosave
         self.autosaveTimer = QTimer(self)                           #create the timer
         self.autosaveTimer.timeout.connect(self.saveFileAction)     #connect the timer to the save method
-        autosave_interval = int(quarkExtra.config["autosave_every"])#get the time interval from the config file (in milliseconds)
-        self.autosaveTimer.start(autosave_interval)                 #set the interval and start the timer
+        #autosave_interval = int(quarkExtra.config["autosave_every"])#get the time interval from the config file (in milliseconds)
+        #self.autosaveTimer.start(autosave_interval)                 #set the interval and start the timer
+        self.autosaveTimer.start(quarkSettings.autosave_interval)   #set the interval and start the timer
 
 
     def closeEvent(self, event):
@@ -314,7 +316,7 @@ class MainWindow(QMainWindow):
         #self.exportToHTMLFile("_output.html")
         #%%                                                 %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkExtra.config["start_html_template_file"]) )
+        self.notePreview.setHtml(htmlDocument,  QUrl("file://" + os.getcwd() + "/" + quarkSettings.start_html_template_file) )
 
 
     def updateSlot(self):
@@ -549,7 +551,7 @@ to create a live preview of the note with support for <a href="http://www.mathja
 
 <p><a href="https://github.com/Leonardo2718/Quark_Note_Taker">View GitHub page &rarr;</a></p>
 
-<p>Copyright &copy; 2014 Leonardo Banderali</p>
+<p>Copyright &copy; 2015 Leonardo Banderali</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

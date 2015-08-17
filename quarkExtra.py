@@ -5,13 +5,13 @@ Project: Quark Note Taker
 File: quarkExtra.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 23, 2014
+Last Modified: August 16, 2015
 
 Description:
     This file contains extra global data and functions for other Quark source files.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -43,19 +43,11 @@ import os
 import json
 
 #Qt objects
-#from PyQt5.QtCore import *
-#from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QHBoxLayout, QLabel, QLineEdit, QPushButton, QDialogButtonBox, QFileDialog
 
 
 
 #~extra data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#load config data from JSON  config file
-configFile = open("config.json", "r")
-config = json.loads( configFile.read() )
-configFile.close()
-
 
 #load session settings from JSON file
 sessionFile = open("session.json", "r")
@@ -85,7 +77,7 @@ def saveCurrentSession(sessionData = None):
         sessionData = session
     jsonData = json.dumps(sessionData, sort_keys=True, indent = 4)
     sessionFile.write(jsonData)
-    configFile.close()
+    sessionFile.close()
 
 
 
