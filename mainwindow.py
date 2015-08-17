@@ -82,6 +82,15 @@ class MainWindow(QMainWindow):
 
         self._syncScroll = False    #variable to hold the state of synchronized scrolling (not synchronized)
 
+        # create markdown parser
+        self.mdParser = markdown.Markdown(
+            extensions=["markdown.extensions.extra","markdown.extensions.toc","markdown.extensions.sane_lists","markdown.extensions.codehilite"],
+            extension_configs = {
+                'markdown.extensions.codehilite' : {'noclasses': 'True','pygments_style': 'monokai'}
+            })
+        # Possible styles include: xcode, default, manni, bw, emacs, murphy, vim, perldoc, native!, paraiso-light, trac,
+        #   fruity!, colorful, tango, vs, autumn, borland, paraiso-dark, pastie, friendly, monokai!, rrt, igor
+
         #setup the main window menu
         self.mainToolBar = self.addToolBar("Main Toolbar")
         self.mainToolBar.setMovable(False)
@@ -288,17 +297,8 @@ class MainWindow(QMainWindow):
     def mdNoteToHtml(self, noteMarkdown):
         """Converts note text/markdown to an html document"""
 
-        # create markdown parser
-        parser = markdown.Markdown(
-            extensions=["markdown.extensions.extra","markdown.extensions.toc","markdown.extensions.sane_lists","markdown.extensions.codehilite"],
-            extension_configs = {
-                'markdown.extensions.codehilite' : {'noclasses': 'True','pygments_style': 'monokai'}
-            })
-        # Possible styles include: xcode, default, manni, bw, emacs, murphy, vim, perldoc, native!, paraiso-light, trac,
-        #   fruity!, colorful, tango, vs, autumn, borland, paraiso-dark, pastie, friendly, monokai!, rrt, igor
-
         #create an HTML document using the predefined head, the HTML form of the note, and the predefined tail
-        htmlDoc = self.htmlDocHead + parser.convert(noteMarkdown) + self.htmlDocTail
+        htmlDoc = self.htmlDocHead + self.mdParser.convert(noteMarkdown) + self.htmlDocTail
 
         return htmlDoc
 
