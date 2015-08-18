@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarknotemanagermodel.py
 Author: Leonardo Banderali
 Created: August 13, 2014
-Last Modified: August 16, 2015
+Last Modified: August 17, 2015
 
 Description:
     This file contains the class which models the Quark note manager.
@@ -45,6 +45,7 @@ import shutil
 
 #Qt objects
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
+from PyQt5.QtWidgets import QMessageBox
 
 #Quark specific
 import quarkExtra
@@ -94,26 +95,41 @@ Note: I arbitrarily decided that notebooks are always displayed after notes.
 
         notesDir = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir) #get the Quark notes directory from the config file
 
-        if not os.path.exists(notesDir):                            #if the the notes directory does note exits, open/create one
-            promptDialog = quarkExtra.GetNotesDirDialog(notesDir, parent)   #prompt the user for for a directory path
-            promptDialog.exec()                                             #
-            notesDir = promptDialog.getNotesPath()                          #
-            #quarkExtra.config["notes_dir"] = notesDir                       #save the directory path
-            quarkExtra.saveCurrentConfigSettings()                          #write changes to the config file
-            if not os.path.exists(notesDir):                                #if the directory does not exits yet, create it
-                os.makedirs(notesDir)
+        # If the notes directory does not exist, ask the user whether Quark
+        # should create the directory specified in the settings.py file.
+        # If no, crash gracefully.  If yes, create it and ask whether to put in
+        # it copies Quark's readme file and documentation.
+        if not os.path.exists(notesDir):
+            _message = "Your config file (settings.py) specifies\n\n\t{notesdir}\n\n\
+as your notes directory.  However, this directory could not be found.  Would you like to create it?\n\n\
+If you chose No, then Quark will not be able to proceed and will terminate.  Otherwise, it will proceed as normal.\n\n\
+You can also change which directory to use to store your notes by setting the `notes_dir` field in your \
+`settings.py` file.".format(notesdir=quarkSettings.notes_dir)
 
-            readmeNotePath = os.path.join(notesDir, "README.md")            #create path to the readme note
-            if not os.path.exists(readmeNotePath):                          #if the note does not already exist
-                readmeFile = os.path.join(os.path.dirname(os.path.realpath(__file__)), "README.md") #get path to Quark's main 'README.md' file
-                if os.path.exists(readmeFile):                                                      #if it exists, copy it to the notes directory
-                    shutil.copyfile(readmeFile, readmeNotePath)
+            buttonPressed = QMessageBox.question(parent, "Notes directory not found", _message)
+            if buttonPressed == QMessageBox.Yes:
+                notesDirPath = os.path.normcase(os.path.expanduser(quarkSettings.notes_dir))
+                os.makedirs(notesDirPath)
+                print("Created notes directory in: ", notesDirPath)
 
-            docsPath = os.path.join(notesDir, "Quark_Documentation")        #create path to the Quark documentation notebook
-            if not os.path.exists(docsPath):
-                docs = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Quark_Documentation")
-                if os.path.exists(docs) and os.path.isdir(docs):
-                    shutil.copytree(docs, docsPath)
+                _message = "Would you like a copy of Quark's README.md file as a note in your notes directory?"
+
+                buttonPressed = QMessageBox.question(parent, "Copy Quark README file", _message)
+                if buttonPressed == QMessageBox.Yes:
+                    readmeNotePath = os.path.join(notesDirPath, "README.md")
+                    shutil.copyfile("README.md", readmeNotePath)
+                    print("Copied README.md to: ", readmeNotePath)
+
+                _message = "Would you like a copy of Quark's documentation files as a notebook in your notes directory?"
+
+                buttonPressed = QMessageBox.question(parent, "Copy Quark documentation files", _message)
+                if buttonPressed == QMessageBox.Yes:
+                    docsPath = os.path.join(notesDirPath, "Quark_Documentation")
+                    shutil.copytree("Quark_Documentation", docsPath)
+                    print("Copied Quark_Documentation to: ", docsPath)
+            else:
+                print(buttonPressed)
+                exit(1)
 
         self.updateModel()  #load data from notes dir
 
