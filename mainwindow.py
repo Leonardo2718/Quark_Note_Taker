@@ -331,7 +331,7 @@ class MainWindow(QMainWindow):
 
         self.saveFileAction()   #save the current note
 
-        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])     #get the search directory
+        p = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)     #get the search directory
         searchPath = os.path.abspath(p)                                         #
         filePath = QFileDialog.getOpenFileName(self, "Open File", searchPath)   #prompt the user for the file path (note: 'filePath' is a tuple)
         if filePath[0] != "":                                                   #if the user did not hit the 'cancel' button
@@ -351,7 +351,7 @@ class MainWindow(QMainWindow):
     def saveAsFileAction(self):
         """Save text in editor to a new note and load it."""
 
-        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])     #get the search directory
+        p = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)     #get the search directory
         searchPath = os.path.abspath(p)                                         #
         filePath = QFileDialog.getSaveFileName(self, "Save As File", searchPath)#prompt the use for the new file path
         if filePath[0] != "":                                                   #do not perform the save if the user pressed the 'cancel' button
@@ -363,7 +363,7 @@ class MainWindow(QMainWindow):
     def saveCopyAsAction(self):
         """Save text in editor to a new note but do not load it."""
 
-        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+        p = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)
         searchPath = os.path.abspath(p)
         filePath = QFileDialog.getSaveFileName(self, "Save Copy As", searchPath)
         if filePath[0] != "":
@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
 
         self.saveFileAction()   #save currently open note
 
-        p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+        p = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)
         searchPath = os.path.abspath(p)
         filePath = QFileDialog.getSaveFileName(self, "New Note", searchPath)
 
@@ -407,7 +407,7 @@ class MainWindow(QMainWindow):
         notebookName, ok = QInputDialog.getText(self, "Create New Notebook - Quark Note Taker", "Notebook name: ", QLineEdit.Normal, "New Notebook")
 
         if ok and notebookName is not None and len(notebookName) > 0:
-            p = quarkExtra.makeAbsoluteFromHome(quarkExtra.config["notes_dir"])
+            p = quarkExtra.makeAbsoluteFromHome(quarkSettings.notes_dir)
             rootPath = os.path.abspath(p)
             os.makedirs( os.path.join(rootPath, notebookName) )
 
