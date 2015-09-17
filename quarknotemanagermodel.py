@@ -146,7 +146,7 @@ You can also change which directory to use to store your notes by setting the `n
 
          #load all the notes and notebooks from the notes directory
         if os.path.exists(notesDir):
-            for item in os.listdir(notesDir):                   #for every item in the notes directory
+            for item in sorted(os.listdir(notesDir)):                   #for every item in the notes directory
 
                 itemPath = os.path.join(notesDir, item)             #get absolute path to the item
 
