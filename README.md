@@ -28,15 +28,16 @@ Make sure you have these installed as **Quark needs them** in order to work:
 
 ##Quick start guide
 1. Make sure you have all dependencies installed and that they all work correctly
-2. Start Quark by running the file `quark.py`
-3. Quark will prompt you to create a notes directory.  By default, it will create
+2. Clone Quark and its submodules using: `git clone --recursive https://github.com/Leonardo2718/Quark_Note_Taker.git`
+3. Start Quark by running the file `quark.py`
+4. Quark will prompt you to create a notes directory.  By default, it will create
 `[HOME_DIRECTORY]/QuarkNotes/` but this can be changed in the `settings.py`
 file.  Once the notes directory is created, Quark will ask you if you want to put a
 copy of this readme file and Quarks documentation files in this new directory.
-4. When Quark starts, if `README.md` is not opened by default, use `File->Open` (or
+5. When Quark starts, if `README.md` is not opened by default, use `File->Open` (or
 type `Ctrl+O`) to open the file/note
-5. If the file opens and is displayed correctly, then Quark is working!
-6. Optional: customize Quark to your liking by modifying any of the following files
+6. If the file opens and is displayed correctly, then Quark is working!
+7. Optional: customize Quark to your liking by modifying any of the following files
 	- `config.json`
 	- `themes/default.css`
 	- `html-template/htmlDoc_start.html`
