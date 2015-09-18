@@ -1,0 +1,3 @@
+[submodule "html-template/MathJax"]
+	path = html-template/MathJax
+	url = https://github.com/mathjax/MathJax.git
