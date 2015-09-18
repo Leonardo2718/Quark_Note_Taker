@@ -613,15 +613,21 @@ THE SOFTWARE.</p>""")
         elif type(item) is QuarkNotebookModel:
             newName, ok = QInputDialog.getText(self, "Rename Notebook - Quark Note Taker", "New notebook name: ", QLineEdit.Normal, currentName)
 
-
         if ok and newName is not None and len(newName) > 0:
-            currentNotePath = item.getFilePath()
-            noteDirPath = os.path.dirname(currentNotePath)
-            newNotePath = os.path.join(noteDirPath, newName)
-            os.rename(currentNotePath, newNotePath)
+            currentItemPath = item.getFilePath()
+            itemDirPath = os.path.dirname(currentItemPath)
+            newItemPath = os.path.join(itemDirPath, newName)
+            os.rename(currentItemPath, newItemPath)
 
         self.noteManager.model().updateModel()
-        self.noteEditor.openFileRequest(newNotePath)    #load the renamed file in the editor
+        if type(item) is QuarkNoteModel:
+            self.noteEditor.openFileRequest(newItemPath)    #load the renamed file in the editor
+        elif type(item) is QuarkNotebookModel:
+            #prevent editing a file that no longer exists because it's directory was renamed
+            currentNoteName = self.noteEditor.getNoteFileName()
+            newCurrentNotePath = os.path.join(newItemPath,currentNoteName)  #if the open note is in the renamed directory, this would be its path
+            if os.path.exists(newCurrentNotePath):
+                self.noteEditor.openFileRequest(newCurrentNotePath)    #load the file in the renamed directory in the editor
 
 
     def showManagerItemMenu(self, position):

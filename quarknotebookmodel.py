@@ -71,7 +71,7 @@ note manager."""
         notebookPath = self._notebookDir.absoluteFilePath() #get the absolute path to the notebook
 
         #load all the notes inside this notebook
-        for item in os.listdir(notebookPath):               #for every item in the notebook
+        for item in sorted(os.listdir(notebookPath)):               #for every item in the notebook
 
             itemPath = os.path.join(notebookPath, item)         #get absolute path to the item
 
