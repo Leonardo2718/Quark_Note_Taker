@@ -7,10 +7,14 @@
     - [Markdown](https://pypi.python.org/pypi/Markdown)
 	- [Pygments](http://pygments.org/)
     - *Note: make sure that all python modules are installed correctly and that they are working*
-2. Download Quark, this can be done in three different ways:
-    1. download and extract the [zip file](https://github.com/Leonardo2718/Quark_Note_Taker/archive/master.zip), or
-    2. download from the [GitHub page](https://github.com/Leonardo2718/Quark_Note_Taker) or
-    3. clone the repository: `git clone https://github.com/Leonardo2718/Quark_Note_Taker.git`
+2. Download Quark. This can be done in a few different ways:
+    1. clone the repository and submodules together: `git clone --recursive https://github.com/Leonardo2718/Quark_Note_Taker.git`
+	2. clone the repository and submodules seperately:
+		1. `git clone https://github.com/Leonardo2718/Quark_Note_Taker.git` 
+           (or download from the [GitHub page](https://github.com/Leonardo2718/Quark_Note_Taker))
+		4. `cd Quark_Note_Taker`
+		2. `git submodule init`
+		3. `git submodule update`
 3. Set where your notes directory is going to be.  This is were Quark's notes manager is going
 to store and look for your notes.  If your ok with using the default (`~/QuarkNotes`), you can
 skip this step. Otherwise:
