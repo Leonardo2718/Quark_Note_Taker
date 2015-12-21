@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 """
 Project: Quark Note Taker
-File: mdhighlighter.py
+File: highlighter.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 21, 2014
+Last Modified: December 21, 2015
 
 Description:
-    This file contains the class used to perform syntax highlighting on the markdown note editor.
+    This file contains the class used to perform syntax highlighting in the note editor.
+    The class handles both Markdown syntax highlighting and highlighting misspelled words.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -52,20 +53,18 @@ from PyQt5.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont
 
 #~note editor~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class MDHighlighter(QSyntaxHighlighter):
-    """Syntax highlighting class for markdown.
-Text is highlighted in a plain text document/editor by
-calling the function 'highlightBlock(self, text)'.  It is called automatically when the text in the
-document/editor changes.  The text passed to this function is a single line (block) of the document
-text.  This function will be called on each line/block of the document when its text is changed by
-the user.
+class Highlighter(QSyntaxHighlighter):
+    """Syntax highlighting class for notes.
+
 Highlighting is done by matching text in the document using regular expressions (rules).  These define
 the exact text which will be highlighted.  When a match is found, the coresponding text (in the document)
 is highlighted using the 'setFormat(start, count, format)' method."""
 
     def __init__(self, parentDocument):
         """Initializes rules (regexp) to find the text that needs to be highlighted"""
-        super(MDHighlighter, self).__init__(parentDocument)
+        super(Highlighter, self).__init__(parentDocument)# the language dictionary to be used
+
+        self.dictionary = None # declare dictionary object
 
         ########################################################################
         ### Rules are stored in dictionaries in order for each rule to have a ##
@@ -97,7 +96,33 @@ is highlighted using the 'setFormat(start, count, format)' method."""
         }
 
 
-    def highlightBlock(self, text):
+    def setDictionary(self, dict) :
+        self.dictionary = dict
+
+
+    def getDictionary(self):
+        return self.dictionary
+
+
+    def checkSpelling(self, text):
+        if not self.dictionary:
+            return
+
+        wordFinder = QRegularExpression("[A-Za-z]+");
+        wordIterator = wordFinder.globalMatch(text)
+        while wordIterator.hasNext():
+            match = wordIterator.next()
+            if not self.dictionary.check(match.captured()):
+                # update the word's current format
+                spellingErrorformat = self.format(match.capturedStart())
+                spellingErrorformat.setUnderlineColor(Qt.red)
+                spellingErrorformat.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
+
+                # set the new format
+                self.setFormat(match.capturedStart(), match.capturedLength(), spellingErrorformat)
+
+
+    def highlighMarkdown(self, text):
         """Finds and highlights text using regular expressions.  Is called on each
 line/block of the document every time the text changes."""
 
@@ -180,3 +205,8 @@ line/block of the document every time the text changes."""
         #%% I have left the highlighting code "un-cleaned" because I %%
         #%% plan on implementing some major changes in the future.   %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    def highlightBlock(self, text):
+        self.highlighMarkdown(text) # highlight Markdown syntax
+        self.checkSpelling(text)    # highlight spelling errors

@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: mainwindow.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 16, 2015
+Last Modified: December 21, 2015
 
 Description:
     This file contains the class wich defines the main application window for Quark.
@@ -187,6 +187,7 @@ class MainWindow(QMainWindow):
         editorSizePolicy.setVerticalStretch(3)
         self.noteEditor.setSizePolicy(editorSizePolicy)
         self.noteArea.addWidget(self.noteEditor)
+        self.menu["Dictionary"] = self.menuBar().addMenu(self.noteEditor.getDictionarySelector())
 
         #create and set the note previewer
         self.notePreview = QWebView(self.noteArea)          #note preview widget
