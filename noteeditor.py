@@ -45,8 +45,8 @@ import locale
 import enchant
 
 #Qt objects
-from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtGui import QTextOption, QFontMetrics, QFont
+from PyQt5.QtCore import Qt, QObject, pyqtSignal
+from PyQt5.QtGui import QTextOption, QTextCursor, QFontMetrics, QFont
 from PyQt5.QtWidgets import QPlainTextEdit, QMenu, QActionGroup, QAction
 
 #Quark specific
@@ -90,6 +90,10 @@ class NoteEditor(QPlainTextEdit):
         self.dictionaryActions.triggered.connect(self.changeDictionary)
         self.defaultDicitionaryAction.trigger()
 
+        # configure the custom context menu for spelling suggestions
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.showContextMenu)
+
         # settings
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
@@ -116,6 +120,37 @@ class NoteEditor(QPlainTextEdit):
         # rehighlight the text to find spelling errors
         self.highlighter.setDictionary(self.dictionary)
         self.highlighter.rehighlight()
+
+
+    def showContextMenu(self, position):
+        # select the word that was right-clicked
+        textCursor = self.cursorForPosition(position)
+        textCursor.select(QTextCursor.WordUnderCursor)
+        word = textCursor.selectedText()
+
+        # if a word was selected and it's misspelled, show a suggestion menu
+        if word and not self.dictionary.check(word):
+
+            # create the suggestion menu
+            suggestionMenu = QMenu()
+            for suggestion in self.dictionary.suggest(word):
+                suggestionMenu.addAction(suggestion)
+            suggestionMenu.addSeparator()
+            standardMenu = self.createStandardContextMenu(position);
+            standardMenu.setTitle("Other...")
+            suggestionMenu.addMenu(standardMenu)
+
+            # show suggestions
+            suggestion = suggestionMenu.exec(self.mapToGlobal(position))
+
+            # if a suggestion was selected, replace the current word with it
+            if suggestion:
+                textCursor.removeSelectedText()
+                textCursor.insertText(suggestion.text())
+
+        # otherwise, show the standard menu items
+        else:
+            self.createStandardContextMenu(position).exec(self.mapToGlobal(position))
 
 
     def openFileRequest(self, filePath):
