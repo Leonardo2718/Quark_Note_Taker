@@ -8,7 +8,8 @@ Created: August 3, 2014
 Last Modified: December 21, 2015
 
 Description:
-    This file contains the class used to perform syntax highlighting on the markdown note editor.
+    This file contains the class used to perform syntax highlighting in the note editor.
+    The class handles both Markdown syntax highlighting and highlighting misspelled words.
 
 
 Copyright (C) 2015 Leonardo Banderali
@@ -54,22 +55,17 @@ from PyQt5.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont
 #~note editor~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class Highlighter(QSyntaxHighlighter):
-    """Syntax highlighting class for markdown.
-Text is highlighted in a plain text document/editor by
-calling the function 'highlightBlock(self, text)'.  It is called automatically when the text in the
-document/editor changes.  The text passed to this function is a single line (block) of the document
-text.  This function will be called on each line/block of the document when its text is changed by
-the user.
+    """Syntax highlighting class for notes.
+
 Highlighting is done by matching text in the document using regular expressions (rules).  These define
 the exact text which will be highlighted.  When a match is found, the coresponding text (in the document)
 is highlighted using the 'setFormat(start, count, format)' method."""
 
     def __init__(self, parentDocument):
         """Initializes rules (regexp) to find the text that needs to be highlighted"""
-        super(Highlighter, self).__init__(parentDocument)
+        super(Highlighter, self).__init__(parentDocument)# the language dictionary to be used
 
-        # the language dictionary to be used
-        self.dictionary = enchant.Dict("en_CA") # use this dictionary for now
+        self.dictionary = None # declare dictionary object
 
         ########################################################################
         ### Rules are stored in dictionaries in order for each rule to have a ##
@@ -101,7 +97,15 @@ is highlighted using the 'setFormat(start, count, format)' method."""
         }
 
 
-    def spellcheck(self, text):
+    def setDictionary(self, dict) :
+        self.dictionary = dict
+
+
+    def getDictionary(self):
+        return self.dictionary
+
+
+    def checkSpelling(self, text):
         if not self.dictionary:
             return
 
@@ -119,7 +123,7 @@ is highlighted using the 'setFormat(start, count, format)' method."""
                 self.setFormat(match.capturedStart(), match.capturedLength(), spellingErrorformat)
 
 
-    def highlightBlock(self, text):
+    def highlighMarkdown(self, text):
         """Finds and highlights text using regular expressions.  Is called on each
 line/block of the document every time the text changes."""
 
@@ -146,7 +150,6 @@ line/block of the document every time the text changes."""
             if not ruleMatch.hasMatch():                                        #if the end expressions for the rule is not found
                 self.setCurrentBlockState( self.previousBlockState() )              #continue inside the current multi-line span (block-state)
                 self.setFormat(0, len(text), textFormat)                            #(no need to subtract one from the length as 'text' includes an extra '\n' ?)
-                self.spellcheck(text)   # highlight spelling errors
                 return                                                              #no need to highlight anything else so return
             else:                                                               #else
                 self.setCurrentBlockState(0)                                        #set the normal block-state
@@ -173,7 +176,6 @@ line/block of the document every time the text changes."""
             else:                                                   #else, highlight full line and set a block-state using 'counter'
                 self.setCurrentBlockState(counter)
                 self.setFormat(start, len(text) - start, textFormat)
-                self.spellcheck(text)   # highlight spelling errors
                 return
 
         #highlight single items
@@ -205,4 +207,7 @@ line/block of the document every time the text changes."""
         #%% plan on implementing some major changes in the future.   %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        self.spellcheck(text) # highlight spelling errors
+
+    def highlightBlock(self, text):
+        self.highlighMarkdown(text) # highlight Markdown syntax
+        self.checkSpelling(text)    # highlight spelling errors

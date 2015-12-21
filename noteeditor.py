@@ -41,6 +41,7 @@ License:
 #python modules
 import sys
 import os
+import enchant
 
 #Qt objects
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -49,6 +50,7 @@ from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
 from highlighter import Highlighter
+import quarkExtra
 
 
 
@@ -60,6 +62,11 @@ class NoteEditor(QPlainTextEdit):
     def __init__(self, parent):
         super(NoteEditor, self).__init__(parent)
         self.highlighter = Highlighter( self.document() )
+
+        # the language dictionary to be used
+        self.dictionary = enchant.Dict("en_CA") # use this dictionary for now
+        self.highlighter.setDictionary(self.dictionary)
+
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
         self.setFont(QFont("Monospace"))
