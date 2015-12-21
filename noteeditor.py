@@ -5,13 +5,13 @@ Project: Quark Note Taker
 File: noteeditor.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 24, 2014
+Last Modified: December 21, 2015
 
 Description:
     This file contains the class wich defines the markdown note editor.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -48,7 +48,7 @@ from PyQt5.QtGui import QTextOption, QFontMetrics, QFont
 from PyQt5.QtWidgets import QPlainTextEdit
 
 #Quark specific
-from mdhighlighter import MDHighlighter
+from highlighter import Highlighter
 
 
 
@@ -59,7 +59,7 @@ class NoteEditor(QPlainTextEdit):
 
     def __init__(self, parent):
         super(NoteEditor, self).__init__(parent)
-        self.mdHighlighter = MDHighlighter( self.document() )
+        self.highlighter = Highlighter( self.document() )
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
         self.setFont(QFont("Monospace"))

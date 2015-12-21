@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 """
 Project: Quark Note Taker
-File: mdhighlighter.py
+File: highlighter.py
 Author: Leonardo Banderali
 Created: August 3, 2014
-Last Modified: August 21, 2014
+Last Modified: December 21, 2015
 
 Description:
     This file contains the class used to perform syntax highlighting on the markdown note editor.
 
 
-Copyright (C) 2014 Leonardo Banderali
+Copyright (C) 2015 Leonardo Banderali
 
 License:
 
@@ -53,7 +53,7 @@ from PyQt5.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont
 
 #~note editor~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class MDHighlighter(QSyntaxHighlighter):
+class Highlighter(QSyntaxHighlighter):
     """Syntax highlighting class for markdown.
 Text is highlighted in a plain text document/editor by
 calling the function 'highlightBlock(self, text)'.  It is called automatically when the text in the
@@ -66,7 +66,7 @@ is highlighted using the 'setFormat(start, count, format)' method."""
 
     def __init__(self, parentDocument):
         """Initializes rules (regexp) to find the text that needs to be highlighted"""
-        super(MDHighlighter, self).__init__(parentDocument)
+        super(Highlighter, self).__init__(parentDocument)
 
         # the language dictionary to be used
         self.dictionary = enchant.Dict("en_CA") # use this dictionary for now
