@@ -42,6 +42,7 @@ License:
 import sys
 import os
 import copy
+import enchant
 
 #Qt objects
 from PyQt5.QtCore import Qt, QRegularExpression, QRegularExpressionMatch
@@ -66,6 +67,9 @@ is highlighted using the 'setFormat(start, count, format)' method."""
     def __init__(self, parentDocument):
         """Initializes rules (regexp) to find the text that needs to be highlighted"""
         super(MDHighlighter, self).__init__(parentDocument)
+
+        # the language dictionary to be used
+        self.dictionary = enchant.Dict("en_CA") # use this dictionary for now
 
         ########################################################################
         ### Rules are stored in dictionaries in order for each rule to have a ##
@@ -97,6 +101,24 @@ is highlighted using the 'setFormat(start, count, format)' method."""
         }
 
 
+    def spellcheck(self, text):
+        if not self.dictionary:
+            return
+
+        wordFinder = QRegularExpression("[A-Za-z]+");
+        wordIterator = wordFinder.globalMatch(text)
+        while wordIterator.hasNext():
+            match = wordIterator.next()
+            if not self.dictionary.check(match.captured()):
+                # update the word's current format
+                spellingErrorformat = self.format(match.capturedStart())
+                spellingErrorformat.setUnderlineColor(Qt.red)
+                spellingErrorformat.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
+
+                # set the new format
+                self.setFormat(match.capturedStart(), match.capturedLength(), spellingErrorformat)
+
+
     def highlightBlock(self, text):
         """Finds and highlights text using regular expressions.  Is called on each
 line/block of the document every time the text changes."""
@@ -124,6 +146,7 @@ line/block of the document every time the text changes."""
             if not ruleMatch.hasMatch():                                        #if the end expressions for the rule is not found
                 self.setCurrentBlockState( self.previousBlockState() )              #continue inside the current multi-line span (block-state)
                 self.setFormat(0, len(text), textFormat)                            #(no need to subtract one from the length as 'text' includes an extra '\n' ?)
+                self.spellcheck(text)   # highlight spelling errors
                 return                                                              #no need to highlight anything else so return
             else:                                                               #else
                 self.setCurrentBlockState(0)                                        #set the normal block-state
@@ -150,6 +173,7 @@ line/block of the document every time the text changes."""
             else:                                                   #else, highlight full line and set a block-state using 'counter'
                 self.setCurrentBlockState(counter)
                 self.setFormat(start, len(text) - start, textFormat)
+                self.spellcheck(text)   # highlight spelling errors
                 return
 
         #highlight single items
@@ -180,3 +204,5 @@ line/block of the document every time the text changes."""
         #%% I have left the highlighting code "un-cleaned" because I %%
         #%% plan on implementing some major changes in the future.   %%
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        self.spellcheck(text) # highlight spelling errors
