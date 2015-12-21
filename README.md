@@ -1,10 +1,10 @@
 #Quark Note Taker
 Quark Note Taker is an opensource, cross platform, Markdown based note taking application written in Python.
 All notes are stored as plain-text/markdown files. Quark is highly customizable as all files are editable
-by the user.  It uses the [PyQt](http://www.riverbankcomputing.com/software/pyqt/intro)
+by the user. It uses the [PyQt](http://www.riverbankcomputing.com/software/pyqt/intro)
 framework for the user interface and [Python Markdown](https://github.com/waylan/Python-Markdown)
-to create a live preview of the note with support for [MathJax](http://www.mathjax.org/).  The live preview
-also suports syntax highlighting for code blocks.
+to create a live preview of the note with support for [MathJax](http://www.mathjax.org/). Basic spell
+checking is available in the note editor and code blocks support syntax highlighting.
 
 *Note: Quark Note Taker has only been tested on Linux platforms*
 
@@ -17,6 +17,7 @@ also suports syntax highlighting for code blocks.
 * syntax highlighting for code blocks using [Pygments](http://pygments.org/)
 * [MathJax](http://www.mathjax.org/) syntax support
 * synchronized scrolling
+* _New:_ spellcheck
 
 ##Dependencies
 Make sure you have these installed as **Quark needs them** in order to work:
@@ -25,6 +26,7 @@ Make sure you have these installed as **Quark needs them** in order to work:
 * [PyQt5](http://pyqt.sourceforge.net/Docs/PyQt5/index.html)
 * [Python Markdown](https://github.com/waylan/Python-Markdown)
 * [Pygments](http://pygments.org/)
+* _New:_ [PyEnchant](https://pythonhosted.org/pyenchant/)
 
 ##Quick start guide
 1. Make sure you have all dependencies installed and that they all work correctly

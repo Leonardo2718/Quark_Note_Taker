@@ -6,6 +6,7 @@
     - [PyQt5](http://www.riverbankcomputing.com/software/pyqt/download5)
     - [Markdown](https://pypi.python.org/pypi/Markdown)
 	- [Pygments](http://pygments.org/)
+	- [PyEnchant](https://pythonhosted.org/pyenchant/)
     - *Note: make sure that all python modules are installed correctly and that they are working*
 2. Download Quark. This can be done in a few different ways:
     1. clone the repository and submodules together: `git clone --recursive https://github.com/Leonardo2718/Quark_Note_Taker.git`
