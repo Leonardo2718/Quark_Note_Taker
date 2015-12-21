@@ -41,16 +41,16 @@ License:
 #python modules
 import sys
 import os
+import locale
 import enchant
 
 #Qt objects
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtGui import QTextOption, QFontMetrics, QFont
-from PyQt5.QtWidgets import QPlainTextEdit
+from PyQt5.QtWidgets import QPlainTextEdit, QMenu, QActionGroup, QAction
 
 #Quark specific
 from highlighter import Highlighter
-import quarkExtra
 
 
 
@@ -64,9 +64,33 @@ class NoteEditor(QPlainTextEdit):
         self.highlighter = Highlighter( self.document() )
 
         # the language dictionary to be used
-        self.dictionary = enchant.Dict("en_CA") # use this dictionary for now
+        self.dictionary = None
         self.highlighter.setDictionary(self.dictionary)
 
+        # create dictionary selector menu
+        self.dictionarySelector = QMenu("&Dictionary")
+        self.dictionaryActions = QActionGroup(self)
+
+        self.noDicitionaryAction = self.dictionaryActions.addAction("None")
+        self.noDicitionaryAction.setCheckable(True)
+        self.dictionarySelector.addAction(self.noDicitionaryAction)
+
+        self.defaultDicitionaryAction = self.dictionaryActions.addAction("Default")
+        self.defaultDicitionaryAction.setCheckable(True)
+        self.dictionarySelector.addAction(self.defaultDicitionaryAction)
+
+        self.dictionarySelector.addSeparator()
+
+        for lang in enchant.list_languages():
+            langAction = self.dictionaryActions.addAction(lang)
+            langAction.setCheckable(True)
+            self.dictionarySelector.addAction(langAction)
+
+        # connect signal to change language dictionary and set the default language
+        self.dictionaryActions.triggered.connect(self.changeDictionary)
+        self.defaultDicitionaryAction.trigger()
+
+        # settings
         self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
         self.setFont(QFont("Monospace"))
@@ -74,6 +98,24 @@ class NoteEditor(QPlainTextEdit):
         self.setTabStopWidth(tabWidth)                                          #set the default tab width to be that of four spaces
 
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
+
+
+    def getDictionarySelector(self):
+        return self.dictionarySelector
+
+
+    def changeDictionary(self, action):
+        # change the language dictionary
+        if action is self.noDicitionaryAction:
+            self.dictionary = None
+        elif action is self.defaultDicitionaryAction:
+            self.dictionary = enchant.Dict(locale.getdefaultlocale()[0])
+        else:
+            self.dictionary = enchant.Dict(action.text())
+
+        # rehighlight the text to find spelling errors
+        self.highlighter.setDictionary(self.dictionary)
+        self.highlighter.rehighlight()
 
 
     def openFileRequest(self, filePath):

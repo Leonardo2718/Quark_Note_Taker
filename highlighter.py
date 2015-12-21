@@ -43,7 +43,6 @@ License:
 import sys
 import os
 import copy
-import enchant
 
 #Qt objects
 from PyQt5.QtCore import Qt, QRegularExpression, QRegularExpressionMatch
