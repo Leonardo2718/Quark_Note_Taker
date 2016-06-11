@@ -4,13 +4,13 @@
 1. Install the latest versions of **all** Quark dependencies:
     - [Python 3](https://www.python.org/downloads/)
     - [PyQt5](http://www.riverbankcomputing.com/software/pyqt/download5)
-    - [Markdown](https://pypi.python.org/pypi/Markdown)
+    - [Misaka](http://misaka.61924.nl)
 	- [Pygments](http://pygments.org/)
 	- [PyEnchant](https://pythonhosted.org/pyenchant/)
-    - *Note: make sure that all python modules are installed correctly and that they are working*
-2. Download Quark. This can be done in a few different ways:
-    1. clone the repository and submodules together: `git clone --recursive https://github.com/Leonardo2718/Quark_Note_Taker.git`
-	2. clone the repository and submodules seperately:
+2. Clone Quark. This can be done in a few different ways:
+    * ***(recommended)*** clone the repository and submodules recursively: 
+`git clone --recursive https://github.com/Leonardo2718/Quark_Note_Taker.git`or,
+	* clone the repository and submodules seperately:
 		1. `git clone https://github.com/Leonardo2718/Quark_Note_Taker.git` 
            (or download from the [GitHub page](https://github.com/Leonardo2718/Quark_Note_Taker))
 		4. `cd Quark_Note_Taker`
