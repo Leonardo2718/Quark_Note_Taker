@@ -5,7 +5,7 @@ Project: Quark Note Taker
 File: quarkrenderer.py
 Author: Leonardo Banderali
 Created: June 9, 2016
-Last Modified: June 9, 2016
+Last Modified: June 10, 2016
 
 Description:
     This file contains the class used to render the markdown into HTML.
@@ -43,6 +43,8 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
+import settings as quarkSettings
+
 
 
 #~renderer~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,6 +53,17 @@ class QuarkRenderer(misaka.HtmlRenderer):
     """A Markdown to HTML renderer for Quark.
 
 This renderer is intended to work with the Misaka module, a python binding for Hoedown."""
+
+    def __init__(self):
+        super(QuarkRenderer, self).__init__()
+
+        htmlFile = open(quarkSettings.start_html_template_file , "r")   #get the head of the HTML template document
+        self.docHead = htmlFile.read()
+        htmlFile.close()
+
+        htmlFile = open(quarkSettings.end_html_template_file, "r")      #get the tail of the HTML template document
+        self.docTail = htmlFile.read()
+        htmlFile.close()
 
     # override code block rendering
     def blockcode(self, text, lang):
@@ -63,3 +76,9 @@ This renderer is intended to work with the Misaka module, a python binding for H
             lexer = get_lexer_by_name(lang, stripall=False) # lexer for the specified language
             formatter = HtmlFormatter()                     # format the text into HTML
             return highlight(text, lexer, formatter)        # return the formated text
+
+    def doc_header(self, inline):
+        return self.docHead
+
+    def doc_footer(self, inline):
+        return self.docTail

@@ -74,14 +74,6 @@ class MainWindow(QMainWindow):
 
         #initialize private variables
 
-        htmlFile = open(quarkSettings.start_html_template_file , "r")   #get the head of the HTML template document
-        self.htmlDocHead = htmlFile.read()
-        htmlFile.close()
-
-        htmlFile = open(quarkSettings.end_html_template_file, "r")      #get the tail of the HTML template document
-        self.htmlDocTail = htmlFile.read()
-        htmlFile.close()
-
         self._syncScroll = False    #variable to hold the state of synchronized scrolling (not synchronized)
 
         # create markdown parser
@@ -295,10 +287,7 @@ class MainWindow(QMainWindow):
 
     def mdNoteToHtml(self, noteMarkdown):
         """Converts note text/markdown to an html document"""
-
-        htmlDoc = self.htmlDocHead + self.htmlRenderer(noteMarkdown) + self.htmlDocTail
-
-        return htmlDoc
+        return self.htmlRenderer(noteMarkdown)
 
 
     def updatePreview(self):
