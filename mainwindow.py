@@ -285,15 +285,10 @@ class MainWindow(QMainWindow):
             self.noteArea.setOrientation(Qt.Vertical)
 
 
-    def mdNoteToHtml(self, noteMarkdown):
-        """Converts note text/markdown to an html document"""
-        return self.htmlRenderer(noteMarkdown)
-
-
     def updatePreview(self):
         """Converts the Markdown note to HTML and loads it into the previewer."""
 
-        htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )
+        htmlDocument = self.htmlRenderer( self.noteEditor.toPlainText() )
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         #%% Some debug code that outputs the HTML to a file %%
         #htmlFile = open("_output.html", "w+")
@@ -683,7 +678,7 @@ defines the position of the item."""
         """Exports the note to an HTML file.  The HTML will reflect what is displayed in the note preview."""
 
         if os.path.exists(filePath) and os.path.isfile(filePath):           #if the file path provided exists
-            htmlDocument = self.mdNoteToHtml( self.noteEditor.toPlainText() )   #convert the note to HTML
+            htmlDocument = self.htmlRenderer( self.noteEditor.toPlainText() )   #convert the note to HTML
             htmlFile = open(filePath, "w")                                      #open the provided file path
             htmlFile.write(htmlDocument)                                        #write the HTML content to the file
             htmlFile.close()                                                    #close the file after writing to it
