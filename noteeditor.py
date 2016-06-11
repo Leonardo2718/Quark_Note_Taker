@@ -123,6 +123,9 @@ class NoteEditor(QPlainTextEdit):
 
 
     def showContextMenu(self, position):
+        # create the context menu that will be displayed
+        contextMenu = QMenu()
+
         # select the word that was right-clicked
         textCursor = self.cursorForPosition(position)
         textCursor.select(QTextCursor.WordUnderCursor)
@@ -132,25 +135,40 @@ class NoteEditor(QPlainTextEdit):
         if word and not self.dictionary.check(word):
 
             # create the suggestion menu
-            suggestionMenu = QMenu()
             for suggestion in self.dictionary.suggest(word):
-                suggestionMenu.addAction(suggestion)
-            suggestionMenu.addSeparator()
-            standardMenu = self.createStandardContextMenu(position);
-            standardMenu.setTitle("Other...")
-            suggestionMenu.addMenu(standardMenu)
+                a = contextMenu.addAction(suggestion)
+                a.setData("custom")
 
-            # show suggestions
-            suggestion = suggestionMenu.exec(self.mapToGlobal(position))
-
-            # if a suggestion was selected, replace the current word with it
-            if suggestion:
-                textCursor.removeSelectedText()
-                textCursor.insertText(suggestion.text())
-
-        # otherwise, show the standard menu items
+            contextMenu.addSeparator()
+            a = contextMenu.addAction("Add to dictionary")
+            a.setData("custom")
         else:
-            self.createStandardContextMenu(position).exec(self.mapToGlobal(position))
+            a = contextMenu.addAction("Remove from dictionary")
+            a.setData("custom")
+
+        contextMenu.addSeparator()
+
+        # add standard context menu actions
+        standardMenu = self.createStandardContextMenu(position);
+        isFirst = True
+        for a in standardMenu.children():
+            if isFirst:
+                isFirst = False
+            else:
+                contextMenu.addAction(a)
+
+        # show context menu
+        action = contextMenu.exec(self.mapToGlobal(position))
+
+        # if a suggestion was selected, replace the current word with it
+        if action and action.data() == "custom":
+            if action.text() == "Add to dictionary":
+                self.dictionary.add(word)
+            elif action.text() == "Remove from dictionary":
+                self.dictionary.remove(word)
+            else:
+                textCursor.removeSelectedText()
+                textCursor.insertText(action.text())
 
 
     def openFileRequest(self, filePath):
