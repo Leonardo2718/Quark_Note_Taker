@@ -42,6 +42,7 @@ import misaka
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+from pygments.styles import get_style_by_name
 
 import settings as quarkSettings
 
@@ -57,13 +58,15 @@ This renderer is intended to work with the Misaka module, a python binding for H
     def __init__(self):
         super(QuarkRenderer, self).__init__()
 
-        htmlFile = open(quarkSettings.start_html_template_file , "r")   #get the head of the HTML template document
+        htmlFile = open(quarkSettings.start_html_template_file , "r")   # get the head of the HTML template document
         self.docHead = htmlFile.read()
         htmlFile.close()
 
-        htmlFile = open(quarkSettings.end_html_template_file, "r")      #get the tail of the HTML template document
+        htmlFile = open(quarkSettings.end_html_template_file, "r")      # get the tail of the HTML template document
         self.docTail = htmlFile.read()
         htmlFile.close()
+
+        self.formatter = HtmlFormatter(style="monokai", noclasses=True) # format the text into HTML
 
     # override code block rendering
     def blockcode(self, text, lang):
@@ -74,11 +77,12 @@ This renderer is intended to work with the Misaka module, a python binding for H
             return "<pre><code>{}</code></pre>".format(text)
         else:
             lexer = get_lexer_by_name(lang, stripall=False) # lexer for the specified language
-            formatter = HtmlFormatter()                     # format the text into HTML
-            return highlight(text, lexer, formatter)        # return the formated text
+            return highlight(text, lexer, self.formatter)   # return the formated text
 
+    # override html document header
     def doc_header(self, inline):
         return self.docHead
 
+    # override html document footer
     def doc_footer(self, inline):
         return self.docTail
