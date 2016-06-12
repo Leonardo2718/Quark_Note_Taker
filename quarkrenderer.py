@@ -68,10 +68,10 @@ This renderer is intended to work with the Misaka module, a python binding for H
         htmlFile.close()
 
         # create a formater
-        self.formatter = HtmlFormatter(style="monokai", cssclass="highlight") # format the text into HTML
+        self.formatter = HtmlFormatter(style=quarkSettings.pygments_style, cssclass="highlight")    # format the text into HTML
 
         # fill in the document header
-        cssFile = open("html-template/stylesheet.css", "r")
+        cssFile = open(quarkSettings.html_template_stylesheet, "r")
         css = cssFile.read()
         cssFile.close()
         self.docHeader = self.docHeader.format(stylesheet="<style>\n{}\n</style>".format(css),
