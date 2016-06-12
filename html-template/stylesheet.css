@@ -25,13 +25,13 @@ h1 {
     border-bottom: 1px solid #ddd;
 }
 
-p, ul {
+p, ul, ol {
     margin: 0.7em 0 1em 0;
 }
 
 code {
     font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-    font-size: 10pt;
+    font-size: 8pt;
     padding: 0 0.3em;
     border: 1px #d5d5f0 solid;
     border-radius: 3px;
@@ -73,7 +73,7 @@ ul, ol {
 
 li {
     padding: 0;
-    line-height: 1.2em;
+    line-height: 1.5em;
 }
 
 li p {
