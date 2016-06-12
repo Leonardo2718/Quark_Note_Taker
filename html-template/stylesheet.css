@@ -1,0 +1,122 @@
+body {
+    color: #444;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5em;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    min-width: 300px;
+    width: 80%;
+}
+
+h1, h2, h3, h4 {
+    font-family: Georgia,Times,"Times New Roman",serif;
+    font-weight: normal;
+    margin: 1.5em 0 0.5em 0;
+}
+
+h1 {
+    color: #111;
+    font-size: 2.2em;
+    line-height: 1em;
+    margin: 1.3em 0 0.5em 0;
+    padding-bottom: 0.2em;
+    border-bottom: 1px solid #ddd;
+}
+
+p, ul {
+    margin: 0.7em 0 1em 0;
+}
+
+code {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    font-size: 10pt;
+    padding: 0 0.3em;
+    border: 1px #d5d5f0 solid;
+    border-radius: 3px;
+    background-color: #dadaf5;
+}
+
+pre {
+    font-size: 10pt;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 1em;
+    /*word-wrap: break-word;*/
+}
+
+pre code {
+    border: none;
+    background-color: white;
+}
+
+blockquote {
+    color: #222;
+    background-color: #eeeeff;
+    margin: 1em 0 1em 0;
+    padding: 1em;
+    border-left: 5px solid #0089d3;
+    /*border-radius: 5px 0 0 5px;*/
+    font-family: Tahoma, Verdana, Segoe, sans-serif;
+    font-size: 13px;
+}
+
+blockquote p {
+    margin: 0;
+}
+
+ul, ol {
+    margin-left: 2.5em;
+    padding: 0;
+}
+
+li {
+    padding: 0;
+    line-height: 1.2em;
+}
+
+li p {
+    margin: 0;
+    padding: 0;
+}
+
+dl {
+    background-color: #eeeeff;
+    margin: 1em 15px 1em 20px;
+    padding: 0.5em 1em;
+    border-left: 0.5em solid #3fc194;
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+dt {
+    font-weight: bold;
+    font-style: italic;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 2px solid #ddd;
+}
+
+th {
+    text-align: center;
+    padding: 0.1em 0.3em;
+}
+
+td {
+    padding: 0.3em 0.5em;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
+}
+
+.MathJax {
+    color: #222;
+}

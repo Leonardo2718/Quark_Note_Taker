@@ -58,15 +58,24 @@ This renderer is intended to work with the Misaka module, a python binding for H
     def __init__(self):
         super(QuarkRenderer, self).__init__()
 
+        # get the document header and footer
         htmlFile = open(quarkSettings.start_html_template_file , "r")   # get the head of the HTML template document
-        self.docHead = htmlFile.read()
+        self.docHeader = htmlFile.read()
         htmlFile.close()
 
         htmlFile = open(quarkSettings.end_html_template_file, "r")      # get the tail of the HTML template document
-        self.docTail = htmlFile.read()
+        self.docFooter = htmlFile.read()
         htmlFile.close()
 
-        self.formatter = HtmlFormatter(style="monokai", noclasses=True) # format the text into HTML
+        # create a formater
+        self.formatter = HtmlFormatter(style="monokai", cssclass="highlight") # format the text into HTML
+
+        # fill in the document header
+        cssFile = open("html-template/stylesheet.css", "r")
+        css = cssFile.read()
+        cssFile.close()
+        self.docHeader = self.docHeader.format(stylesheet="<style>\n{}\n</style>".format(css),
+                                               pygments_stylesheet="<style>\n{}\n</style>".format(self.formatter.get_style_defs()))
 
     # override code block rendering
     def blockcode(self, text, lang):
@@ -74,15 +83,15 @@ This renderer is intended to work with the Misaka module, a python binding for H
 
         if not lang:
             # if no language is specified, simply return the text as a plain code block
-            return "<pre><code>{}</code></pre>".format(text)
+            return "<div class='highlight'><pre>{}</pre></div>".format(text)
         else:
             lexer = get_lexer_by_name(lang, stripall=False) # lexer for the specified language
             return highlight(text, lexer, self.formatter)   # return the formated text
 
     # override html document header
     def doc_header(self, inline):
-        return self.docHead
+        return self.docHeader
 
     # override html document footer
     def doc_footer(self, inline):
-        return self.docTail
+        return self.docFooter
