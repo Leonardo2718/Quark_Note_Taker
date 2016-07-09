@@ -132,21 +132,22 @@ class NoteEditor(QPlainTextEdit):
         word = textCursor.selectedText()
 
         # if a word was selected and it's misspelled, show a suggestion menu
-        if word and not self.dictionary.check(word):
+        if word and not len(word) is 0:
+            if not self.dictionary.check(word):
 
-            # create the suggestion menu
-            for suggestion in self.dictionary.suggest(word):
-                a = contextMenu.addAction(suggestion)
+                # create the suggestion menu
+                for suggestion in self.dictionary.suggest(word):
+                    a = contextMenu.addAction(suggestion)
+                    a.setData("custom")
+
+                contextMenu.addSeparator()
+                a = contextMenu.addAction("Add to dictionary")
+                a.setData("custom")
+            else:
+                a = contextMenu.addAction("Remove from dictionary")
                 a.setData("custom")
 
             contextMenu.addSeparator()
-            a = contextMenu.addAction("Add to dictionary")
-            a.setData("custom")
-        else:
-            a = contextMenu.addAction("Remove from dictionary")
-            a.setData("custom")
-
-        contextMenu.addSeparator()
 
         # add standard context menu actions
         standardMenu = self.createStandardContextMenu(position);
