@@ -95,7 +95,6 @@ class NoteEditor(QPlainTextEdit):
         self.customContextMenuRequested.connect(self.showContextMenu)
 
         # settings
-        self.setWordWrapMode(QTextOption.NoWrap)
         self.noteFilePath = ""                  #stores path to the file being edited
         self.setFont(QFont("Monospace"))
         tabWidth = QFontMetrics( self.currentCharFormat().font() ).width("    ")#get the width of four spaces
@@ -104,11 +103,17 @@ class NoteEditor(QPlainTextEdit):
     #%%% To do: use 'keyPressEvent' to implement auto-indent %%%
 
 
+    def setWrapMode(self, wrapMode):
+        self.setWordWrapMode(wrapMode)
+
+
     def getDictionarySelector(self):
         return self.dictionarySelector
 
 
     def changeDictionary(self, action):
+        """Change the spell check dictionary (language) based on the languaged selected from the 'Dictionary' menu."""
+
         # change the language dictionary
         if action is self.noDicitionaryAction:
             self.dictionary = None
@@ -123,6 +128,8 @@ class NoteEditor(QPlainTextEdit):
 
 
     def showContextMenu(self, position):
+        """Shows an appropriate context menu for the area of the editor that was right-clicked."""
+
         # create the context menu that will be displayed
         contextMenu = QMenu()
 

@@ -121,6 +121,14 @@ class MainWindow(QMainWindow):
         self.action["Synchronized Scrolling"] = self.menu["View"].addAction("&Synchronized Scrolling")
         self.menu["View"].addSeparator()
         self.action["Note Manager"] = self.menu["View"].addAction("&Note Manager")
+        self.menu["View"].addSeparator()
+        self.actionGroup["wrap mode"] = QActionGroup(self)
+        self.action["No Wrap"] = self.actionGroup["wrap mode"].addAction("N&o Wrap")
+        self.menu["View"].addAction( self.action["No Wrap"] )
+        self.action["Word Wrap"] = self.actionGroup["wrap mode"].addAction("&Word Wrap")
+        self.menu["View"].addAction( self.action["Word Wrap"] )
+        self.action["Line Wrap"] = self.actionGroup["wrap mode"].addAction("&Line Wrap")
+        self.menu["View"].addAction( self.action["Line Wrap"] )
 
         #create shorcuts for actions in 'View' menu
         self.action["Note Manager"].setShortcut( QKeySequence("Ctrl+M") )
@@ -135,6 +143,9 @@ class MainWindow(QMainWindow):
         self.action["View Editor/Preview Vertically"].setCheckable(True)
         self.action["Note Manager"].setCheckable(True)
         self.action["Synchronized Scrolling"].setCheckable(True)
+        self.action["No Wrap"].setCheckable(True)
+        self.action["Word Wrap"].setCheckable(True)
+        self.action["Line Wrap"].setCheckable(True)
 
         #create actions for 'Help' menu
         self.action["About Quark Note Taker"] = self.menu["Help"].addAction("&About Quark Note Taker")
@@ -201,6 +212,7 @@ class MainWindow(QMainWindow):
         self.actionGroup["display mode"].triggered.connect(self.changeLayoutModeOnAction)
         self.action["View Editor/Preview Vertically"].toggled.connect(self.changeNoteDirectionOnAction)
         self.action["Synchronized Scrolling"].toggled.connect(self.setSyncScroll)
+        self.actionGroup["wrap mode"].triggered.connect(self.setWrapModeOnAction)
 
         #connect signals in 'Help' menu to slots
         self.action["About Quark Note Taker"].triggered.connect(self.displayAboutQuark)
@@ -274,6 +286,19 @@ class MainWindow(QMainWindow):
             self.noteEditor.setVisible(True)
             self.notePreview.setVisible(True)
             self.updatePreview()
+
+
+    def setWrapModeOnAction(self, action):
+        """Changes the wrapping mode of the editor based on the 'view' menu action triggered."""
+
+        if action == self.action["No Wrap"]:
+            self.noteEditor.setWrapMode(QTextOption.NoWrap)
+
+        elif action == self.action["Word Wrap"]:
+            self.noteEditor.setWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
+
+        elif action == self.action["Line Wrap"]:
+            self.noteEditor.setWrapMode(QTextOption.WrapAnywhere)
 
 
     def changeNoteDirectionOnAction(self, isVertical):
@@ -456,6 +481,11 @@ class MainWindow(QMainWindow):
         viewMode.setChecked(True)
         self.changeLayoutModeOnAction(viewMode)
 
+        #set wrap mode
+        wrapMode = self.action[ quarkExtra.session["wrap_mode"] ]
+        wrapMode.setChecked(True)
+        self.setWrapModeOnAction(wrapMode)
+
         #set the notes manager's visibility
         if quarkExtra.session["display_note_manager"] == "true":
             self.action["Note Manager"].setChecked(True)
@@ -493,9 +523,11 @@ class MainWindow(QMainWindow):
         quarkExtra.session["opened_note"] = self.noteEditor.getNotePath()
 
         #save the note viewing mode
-        for key, value in self.action.items():
+        for key, value in self.action.items():  # TODO: this loop should really be optimized
             if value == self.actionGroup["display mode"].checkedAction():
                 quarkExtra.session["default_view_mode"] = key
+            elif value == self.actionGroup["wrap mode"].checkedAction():
+                quarkExtra.session["wrap_mode"] = key
 
         #save synchronized scrolling state
         if self.action["Synchronized Scrolling"].isChecked() and self._syncScroll == True :
